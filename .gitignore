@@ -7,3 +7,4 @@ upload
 .svn
 *.user
 *.suo
+/third-party/*.DS_Store
