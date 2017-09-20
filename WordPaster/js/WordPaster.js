@@ -1,8 +1,7 @@
 ﻿/*
-	版权所有 2009-2015 荆门泽优软件有限公司 保留所有版权。
-	邮箱:1085617561@qq.com
-	描述:Word图片上传控件
-	此文件实现上传后自动关闭上传窗口的功能
+	版权所有 2009-2017 荆门泽优软件有限公司 保留所有版权。
+	官网：http://www.ncmem.com/
+    论坛：http://bbs.ncmem.com/
 	更新记录：
 		2012-07-04 增加对IE9的支持。
 */
@@ -26,7 +25,7 @@ var WordPasterError = {
 var WordPasterConfig = {
 	"EncodeType"		    : "GB2312"
 	, "Company"			    : "荆门泽优软件有限公司"
-	, "Version"			    : "1,5,125,50965"
+	, "Version"			    : "1,5,128,51252"
 	, "License"			    : ""
 	, "Debug"			    : false//调试模式
 	, "LogFile"			    : "f:\\log.txt"//日志文件路径
@@ -57,12 +56,9 @@ var WordPasterConfig = {
 	, "CrxName"		        : "npWordPaster2"
 	, "CrxType"	            : "application/npWordPaster2"
 	, "CrxPath"		        : "http://www.ncmem.com/download/WordPaster2/WordPaster.crx"
-	//Chrome 45
-    , "NatHostName"         : "com.xproer.wordpaster"//
-    , "ExtensionID"         : "nmopflahkgegkgkfnhdjpflfjipkpjpk"
-	, "NatPath"		        : "http://www.ncmem.com/download/WordPaster2/WordPaster.nat.crx"
+    //Edge
     , edge: { protocol: "wordpaster", port: 9200, visible: false }
-	, "ExePath": "http://www.ncmem.com/download/WordPaster2/WordPaster.exe"
+    , "ExePath": "http://www.ncmem.com/download/WordPaster2/WordPaster.exe"
 };
 function debugMsg(m) { $("#msg").append(m);}
 var WordPasterActiveX = {
@@ -125,25 +121,23 @@ function WordPasterManager()
 	this.chrome45 = false;
 	this.edge = navigator.userAgent.indexOf("Edge") > 0;
 	this.chrVer = navigator.appVersion.match(/Chrome\/(\d+)/);
+	this.ffVer = navigator.userAgent.match(/Firefox\/(\d+)/);
 	if (this.edge) { this.ie = this.firefox = this.chrome = this.chrome45 = false; }
 
     $(window).bind("beforeunload", function () {
         if (this.edge) _this.edgeApp.close();
     });
-	if (this.ie)
+    //Win64
+    if (window.navigator.platform == "Win64")
 	{
-	    //Win64
-	    if (window.navigator.platform == "Win64")
-	    {
-	        _this.Config["ClsidParser"] = this.Config["ClsidParser64"];
-	        _this.Config["CabPath"] = this.Config["CabPath64"];
-	        //ActiveX
-	        _this.ActiveX["WordParser"] = this.ActiveX["WordParser64"];
-	    }
-	} //Firefox
-	else if (this.firefox)
+        _this.Config["ClsidParser"] = this.Config["ClsidParser64"];
+        _this.Config["CabPath"] = this.Config["CabPath64"];
+        //ActiveX
+        _this.ActiveX["WordParser"] = this.ActiveX["WordParser64"];   
+	}//Firefox
+	if (this.firefox)
     {
-        if (!this.app.supportFF())//仍然支持npapi
+	    if (!this.app.supportFF() || parseInt(this.ffVer[1]) >= 50)//仍然支持npapi
         {
             this.app.postMessage = this.app.postMessageEdge;
             this.edge = true;
@@ -175,6 +169,7 @@ function WordPasterManager()
     };
     this.need_update = function ()
     {
+        this.ui.setup.skygqbox();
         var dom = this.ui.setup.html("发现新版本，请<a name='w-exe' href='#'>更新</a>");
         var lnk = dom.find('a[name="w-exe"]');
         lnk.attr("href", this.Config["ExePath"]);
@@ -214,6 +209,7 @@ function WordPasterManager()
         acx += ' <object name="' + this.iePasterName + '" classid="clsid:' + this.Config["ClsidParser"] + '"';
 	    acx += ' codebase="' + this.Config["CabPath"] + '#version=' + this.Config["Version"] + '"';
 	    acx += ' width="1" height="1" ></object>';
+	    if (this.edge) acx = '';
 	    //单张图片上传窗口
 	    acx += '<div name="imgPasterDlg" class="panel-paster" style="display:none;">';
 	    acx += '<img name="ico" id="infIco" alt="进度图标" src="' + this.Config["IcoUploader"] + '" /><span name="msg">图片上传中...</span><span name="percent">10%</span>';
@@ -297,7 +293,7 @@ function WordPasterManager()
                 if (_this.ie) _this.parter = _this.ieParser;
                 _this.parter.recvMessage = _this.recvMessage;
             }
-            _this.setup_tip();
+            //_this.setup_tip();
             if (_this.edge) {
                 _this.edgeApp.runChr();
             }
@@ -312,7 +308,7 @@ function WordPasterManager()
 	};
 	this.CloseDialogFile = function ()
 	{
-	    $('#wrapClose').click();
+		$.skygqbox.hide();
 	};
 
     //打开粘贴图片对话框
@@ -322,7 +318,7 @@ function WordPasterManager()
 	};
 	this.CloseDialogPaste = function ()
 	{
-	    $('#wrapClose').click();
+		$.skygqbox.hide();
 	};
 	this.InsertHtml = function (html)
 	{
@@ -334,8 +330,6 @@ function WordPasterManager()
 	this.SetEditor = function (edt)
 	{
 	    _this.Editor = edt;
-	    //_this.WordPaster.Editor = edt;
-	    //_this.ImagePaster.Editor = edt;
 	};
 
     //粘贴命令
@@ -598,7 +592,7 @@ function WordPasterManager()
             }
         }
         if (needUpdate) this.need_update();
-        else { $('#wrapClose').click(); }
+        else { $.skygqbox.hide(); }
     };
     this.recvMessage = function (msg)
 	{
