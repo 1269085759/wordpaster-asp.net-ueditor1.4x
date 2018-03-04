@@ -2,7 +2,8 @@
 	版权所有 2009-2017 荆门泽优软件有限公司 保留所有版权。
 	官网：http://www.ncmem.com/
     论坛：http://bbs.ncmem.com/
-	更新记录：
+    版本：2.2
+    更新记录：
 		2012-07-04 增加对IE9的支持。
 */
 
@@ -25,7 +26,7 @@ var WordPasterError = {
 var WordPasterConfig = {
 	"EncodeType"		    : "GB2312"
 	, "Company"			    : "荆门泽优软件有限公司"
-	, "Version"			    : "1,5,128,51252"
+	, "Version"			    : "1,5,145,60749"
 	, "License"			    : ""
 	, "Debug"			    : false//调试模式
 	, "LogFile"			    : "f:\\log.txt"//日志文件路径
@@ -37,7 +38,10 @@ var WordPasterConfig = {
 	, "CryptoType"		    : "uuid"//名称计算方式,md5,crc,sha1,uuid，其中uuid为随机名称
 	, "ThumbWidth"		    : "0"	//缩略图宽度。0表示不使用缩略图
 	, "ThumbHeight"		    : "0"	//缩略图高度。0表示不使用缩略图
-	, "AppPath"			    : ""
+	, "FileFieldName"		: "file"//自定义文件名称名称
+    , "ImageMatch"		    : ""//服务器返回数据匹配模式，正则表达式，提取括号中的地址
+    , "FormulaDraw"		    : "gdi"//公式图片绘制器，gdi,magick
+    , "AppPath"			    : ""
 	, "Cookie"			    : ""
     , "Servers"             :[{"url":"www.ncmem.com"},{"url":"www.xproerui.com"}]//内部服务器地址(不下载此地址中的图片)
 	, "IcoError"            : "http://www.ncmem.com/products/word-imagepaster/ckeditor353/WordPaster/error.png"
@@ -450,14 +454,14 @@ function WordPasterManager()
                 {
                     case "暂停":
                     case "停止":
-                        upFile.Stop();
+                        task.Stop();
                         break;
                     case "取消":
-                        { upFile.Remove(); }
+                        { task.Remove(); }
                         break;
                     case "续传":
                     case "重试":
-                        upFile.Post();
+                        task.Post();
                         break;
                 }
             });
@@ -475,7 +479,7 @@ function WordPasterManager()
 	    return task;
 	};
 	this.WordParser_PasteWord = function (json)
-	{
+    {
 	    this.postType = WordPasteImgType.word;
 	    this.EditorContent = json.word;
 	    for (var i = 0, l = json.imgs.length; i < l; ++i)
@@ -581,6 +585,20 @@ function WordPasterManager()
 	{
         _this.app.init();
     };
+    this.state_change = function (json) {
+        if (json.value == "parse_document")
+        {
+            this.OpenDialogFile();
+            this.filesPanel.text("正在解析文档");
+        }
+        else if (json.value == "process_data") {
+            this.filesPanel.text("正在处理数据");
+        }
+        else if (json.value == "process_data_end")
+        {
+            this.filesPanel.text("");
+        }
+    };
     this.load_complete = function (json)
     {
         var needUpdate = true;
@@ -612,5 +630,6 @@ function WordPasterManager()
         else if (json.name == "load_complete") _this.load_complete(json);
 	    else if (json.name == "Queue_Complete") _this.Queue_Complete(json);
 	    else if (json.name == "load_complete_edge") _this.load_complete_edge(json);
+        else if (json.name == "state_change") _this.state_change(json);
 	};
 }
