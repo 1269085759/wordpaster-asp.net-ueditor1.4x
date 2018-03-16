@@ -26,7 +26,7 @@ var WordPasterError = {
 var WordPasterConfig = {
 	"EncodeType"		    : "GB2312"
 	, "Company"			    : "荆门泽优软件有限公司"
-	, "Version"			    : "1,5,145,60749"
+	, "Version"			    : "1,5,140,60764"
 	, "License"			    : ""
 	, "Debug"			    : false//调试模式
 	, "LogFile"			    : "f:\\log.txt"//日志文件路径
