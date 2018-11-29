@@ -156,8 +156,9 @@ function WordPasterManager()
 	    {
             if (!this.app.supportFF())//仍然支持npapi
             {
-                this.app.postMessage = this.app.postMessageEdge;
                 this.edge = true;
+                this.app.postMessage = this.app.postMessageEdge;
+                this.edgeApp.run = this.edgeApp.runChr;
 	        }
 	    }
 	}
@@ -297,9 +298,8 @@ function WordPasterManager()
                 if (_this.ie) _this.parter = _this.ieParser;
                 _this.parter.recvMessage = _this.recvMessage;
             }
-            //_this.setup_tip();
             if (_this.edge) {
-                _this.edgeApp.runChr();
+                _this.edgeApp.connect();
             }
             else { _this.app.init(); }
 	    });

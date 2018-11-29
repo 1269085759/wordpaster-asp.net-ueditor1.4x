@@ -4,6 +4,7 @@
     // 创建一个Socket实例
     this.socket = null;
     this.tryConnect = true;
+    this.exit = false;
 
     this.run = function ()
     {
@@ -54,20 +55,24 @@
             // 监听Socket的关闭
             con.onclose = function (event)
             {
-                //console.log('Client notified socket has closed', event);
+                //手动退出
+                if (!this.exit) {
+                    _this.tryConnect = true;
+                    _this.run();
+                    setTimeout(function () { _this.connect() }, 1000);//启动定时器
+                }
             };
-
-            // 关闭Socket.... 
-            //socket.close() 
         };
         con.onerror = function (event)
         {
+            _this.run();
             console.log("连接失败");
             setTimeout(function () { _this.connect() }, 1000);//启动定时器
         };
     };
     this.close = function ()
     {
+        this.exit = true;
         if (this.socket) { this.socket.close(1000, "close"); }
     };
     this.send = function (p)
