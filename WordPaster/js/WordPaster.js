@@ -98,6 +98,7 @@ function WordPasterManager()
     this.ffPasterName = "ffPaster" + new Date().getTime();
     this.iePasterName = "iePaster" + new Date().getTime();
     this.setuped = false;//控件是否安装
+    this.websocketInited = false;
     this.natInstalled = false;
     this.filesPanel = null;//jquery obj
     this.fileItem = null;//jquery obj
@@ -601,6 +602,9 @@ function WordPasterManager()
     };
     this.load_complete = function (json)
     {
+        if (this.websocketInited) return;
+        this.websocketInited = true;
+
         var needUpdate = true;
         if (typeof (json.version) != "undefined")
         {

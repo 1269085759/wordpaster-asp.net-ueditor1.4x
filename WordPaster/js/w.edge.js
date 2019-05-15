@@ -26,7 +26,8 @@
     };
     this.runChr = function () {
         var protocol = mgr.Config.edge.protocol + "://" + mgr.Config.edge.port;
-        var html = "<iframe id='uri-fra' width=1 height=1 src='" + protocol + "'></iframe>";
+        var html = "<iframe id='wordpaster-uri-fra' width=1 height=1 src='" + protocol + "'></iframe>";
+        $("#wordpaster-uri-fra").remove();
         $(document.body).append(html);
         setTimeout(function () { _this.connect() }, 1000);//启动定时器
     };
