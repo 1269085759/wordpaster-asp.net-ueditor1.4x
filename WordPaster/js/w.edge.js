@@ -25,7 +25,7 @@
         }
     };
     this.runChr = function () {
-        var protocol = mgr.Config.edge.protocol + "://" + mgr.Config.edge.port;
+        var protocol = mgr.Config.edge.protocol + "://?port=" + mgr.Config.edge.port;
         var html = "<iframe id='wordpaster-uri-fra' width=1 height=1 src='" + protocol + "'></iframe>";
         $("#wordpaster-uri-fra").remove();
         $(document.body).append(html);
@@ -68,13 +68,13 @@
         {
             _this.run();
             console.log("连接失败");
-            setTimeout(function () { _this.connect() }, 1000);//启动定时器
+            setTimeout(function () { _this.connect() }, 3000);//启动定时器
         };
     };
     this.close = function ()
     {
         this.exit = true;
-        if (this.socket) { this.socket.close(1000, "close"); }
+        if (this.socket) { this.socket.close(3000, "close"); }
     };
     this.send = function (p)
     {

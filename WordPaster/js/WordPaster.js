@@ -63,6 +63,7 @@ var WordPasterConfig = {
     //Edge
     , edge: { protocol: "wordpaster", port: 9200, visible: false }
     , "ExePath": "http://www.ncmem.com/download/WordPaster2/WordPaster.exe"
+    , "mac": { path: "http://res2.ncmem.com/download/WordPaster/fast/2.0.17/WordPaster.pkg" }
 };
 function debugMsg(m) { $("#msg").append(m);}
 var WordPasterActiveX = {
@@ -139,8 +140,14 @@ function WordPasterManager()
         _this.Config["CabPath"] = this.Config["CabPath64"];
         //ActiveX
         _this.ActiveX["WordParser"] = this.ActiveX["WordParser64"];   
-	}//Firefox
-	if (this.firefox)
+    }//macOS
+    else if (window.navigator.platform == "MacIntel") {
+        this.edge = true;
+        this.app.postMessage = this.app.postMessageEdge;
+        this.edgeApp.run = this.edgeApp.runChr;
+        this.Config.ExePath = this.Config.mac.path;
+    }//Firefox
+	else if (this.firefox)
     {
 	    if (!this.app.supportFF() || parseInt(this.ffVer[1]) >= 50)//仍然支持npapi
         {
