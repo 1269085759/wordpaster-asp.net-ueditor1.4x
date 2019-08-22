@@ -23,6 +23,8 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <Use64BitIISExpress />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -156,6 +158,7 @@
     <Content Include="dialogs\wordimage\wordimage.html" />
     <Content Include="dialogs\wordimage\wordimage.js" />
     <Content Include="index-scp.htm" />
+    <Content Include="index-vue.html" />
     <Content Include="index.aspx" />
     <Content Include="lang\en\en.js" />
     <Content Include="lang\en\images\addimage.png" />
@@ -186,6 +189,7 @@
     <Content Include="scp\screencapture.gif" />
     <Content Include="scp\SL_Uploading.gif" />
     <Content Include="scp\uploading.gif" />
+    <Content Include="vue.min.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -291,6 +295,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="WordPaster\wordpaster.vue" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
