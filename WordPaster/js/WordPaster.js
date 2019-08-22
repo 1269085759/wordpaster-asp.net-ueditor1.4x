@@ -63,6 +63,7 @@ var WordPasterConfig = {
     //Edge
     , edge: { protocol: "wordpaster", port: 9200, visible: false }
     , "ExePath": "http://www.ncmem.com/download/WordPaster2/WordPaster.exe"
+    , "mac": { path: "http://res2.ncmem.com/download/WordPaster/fast/2.0.17/WordPaster.pkg" }
 };
 function debugMsg(m) { $("#msg").append(m);}
 var WordPasterActiveX = {
@@ -98,6 +99,7 @@ function WordPasterManager()
     this.ffPasterName = "ffPaster" + new Date().getTime();
     this.iePasterName = "iePaster" + new Date().getTime();
     this.setuped = false;//控件是否安装
+    this.websocketInited = false;
     this.natInstalled = false;
     this.filesPanel = null;//jquery obj
     this.fileItem = null;//jquery obj
@@ -138,8 +140,14 @@ function WordPasterManager()
         _this.Config["CabPath"] = this.Config["CabPath64"];
         //ActiveX
         _this.ActiveX["WordParser"] = this.ActiveX["WordParser64"];   
-	}//Firefox
-	if (this.firefox)
+    }//macOS
+    else if (window.navigator.platform == "MacIntel") {
+        this.edge = true;
+        this.app.postMessage = this.app.postMessageEdge;
+        this.edgeApp.run = this.edgeApp.runChr;
+        this.Config.ExePath = this.Config.mac.path;
+    }//Firefox
+	else if (this.firefox)
     {
 	    if (!this.app.supportFF() || parseInt(this.ffVer[1]) >= 50)//仍然支持npapi
         {
@@ -156,8 +164,9 @@ function WordPasterManager()
 	    {
             if (!this.app.supportFF())//仍然支持npapi
             {
-                this.app.postMessage = this.app.postMessageEdge;
                 this.edge = true;
+                this.app.postMessage = this.app.postMessageEdge;
+                this.edgeApp.run = this.edgeApp.runChr;
 	        }
 	    }
 	}
@@ -297,9 +306,8 @@ function WordPasterManager()
                 if (_this.ie) _this.parter = _this.ieParser;
                 _this.parter.recvMessage = _this.recvMessage;
             }
-            //_this.setup_tip();
             if (_this.edge) {
-                _this.edgeApp.runChr();
+                _this.edgeApp.connect();
             }
             else { _this.app.init(); }
 	    });
@@ -601,6 +609,9 @@ function WordPasterManager()
     };
     this.load_complete = function (json)
     {
+        if (this.websocketInited) return;
+        this.websocketInited = true;
+
         var needUpdate = true;
         if (typeof (json.version) != "undefined")
         {

@@ -32,7 +32,8 @@ namespace UEditor
                     || ext == ".jpeg"
 					|| ext == ".png"
 					|| ext == ".gif"
-					|| ext == ".bmp")
+					|| ext == ".bmp"
+                    || ext == ".webp")
 				{
 					string filePath = Path.Combine(folder, file.FileName);
 
