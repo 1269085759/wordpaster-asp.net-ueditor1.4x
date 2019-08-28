@@ -324,7 +324,7 @@
           <IISUrl>http://localhost:1762/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>True</UseCustomServer>
-          <CustomServerUrl>http://localhost:162/</CustomServerUrl>
+          <CustomServerUrl>http://localhost:8891/</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

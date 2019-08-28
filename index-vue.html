@@ -34,7 +34,7 @@
             },
             mounted() {
                 this.wdp = new WordPasterManager();
-                this.wdp.Config["PostUrl"] = "http://localhost:1762/upload.aspx";
+                this.wdp.Config["PostUrl"] = "http://localhost:8891/upload.aspx";
                 this.wdp.Load();
                 this.editor = window.UE.getEditor('editor');
                 this.editor.addListener('ready', () => {
