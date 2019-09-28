@@ -1902,6 +1902,7 @@ div.edui-box {
     background-position: -72px -34px;
 }
 /*WordPaster*/
-.edui-default .edui-for-wordpaster .edui-icon {width:15px;height:15px;background-position: -753px -77px;}
+.edui-for-wordpaster .edui-icon {width: 16px;height: 16px;background: url("../images/paster.png") no-repeat 2px 2px !important;}
+/*.edui-default .edui-for-wordpaster .edui-icon {width:15px;height:15px;background-position: -753px -77px;}*/
 .edui-default .edui-for-netpaster .edui-icon {width: 16px;height: 16px;background-position: -803px -77px;}
 .edui-default .edui-for-excelpaster .edui-icon {background-position: -675px -77px;}
