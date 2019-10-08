@@ -23286,6 +23286,7 @@ UE.plugin.register('snapscreen', function (){
              */
             'snapscreen':{
                 execCommand:function (cmd) {
+                    scpMgr.Capture(); return;
                     var url, local, res;
                     var lang = me.getLang("snapScreen_plugin");
 

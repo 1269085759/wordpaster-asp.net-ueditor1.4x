@@ -184,7 +184,9 @@
     <Content Include="lang\zh-cn\images\music.png" />
     <Content Include="lang\zh-cn\images\upload.png" />
     <Content Include="lang\zh-cn\zh-cn.js" />
+    <Content Include="scp\scp.app.js" />
     <Content Include="scp\scp.css" />
+    <Content Include="scp\scp.edge.js" />
     <Content Include="scp\scp.js" />
     <Content Include="scp\screencapture.gif" />
     <Content Include="scp\SL_Uploading.gif" />

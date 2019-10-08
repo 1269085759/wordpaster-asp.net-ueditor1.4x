@@ -1,41 +1,58 @@
-﻿/*
-	版权所有 2009-2013 荆门泽优软件有限公司
+/*
+	版权所有 2009-2019 荆门泽优软件有限公司
 	保留所有权利
 	官方网站：http://www.ncmem.com
-	官方博客：http://www.cnblogs.com/xproer
-	产品首页：http://www.ncmem.com/webplug/screencapture/index.asp
-	产品介绍：http://www.cnblogs.com/xproer/archive/2010/08/09/1796077.html
-	在线演示-标准版：http://www.ncmem.com/products/screencapture/demo/index.html
-	在线演示-专业版：http://www.ncmem.com/products/screencapture/demo2/index.html
-	在线演示-FCKEditor2.x：http://www.ncmem.com/products/screencapture/fckeditor2x/index.html
-	在线演示-CKEditor3.x：http://www.ncmem.com/products/screencapture/demo-ckeditor361/index_ckeditor361.html
-	在线演示-xhEditor1.x：http://www.ncmem.com/products/screencapture/kindeditor3x/index.html
-	布署文档：http://www.cnblogs.com/xproer/archive/2011/09/14/2176188.html
-	升级日志：http://www.cnblogs.com/xproer/archive/2010/12/04/1896399.html
-	开发文档-ASP.NET(C#)：http://www.cnblogs.com/xproer/archive/2010/12/04/1896552.html
-	开发文档-PHP：http://www.cnblogs.com/xproer/archive/2011/05/16/2047915.html
-	开发文档-JSP：http://www.cnblogs.com/xproer/archive/2011/05/20/2051862.html
-	示例下载-标准版：http://yunpan.cn/lk/11mb4zslvk
-	示例下载-专业版：http://yunpan.cn/lk/11b1drhnvk
-	文档下载：http://yunpan.cn/lk/11pbm5mjvk
-	VC运行库：http://www.microsoft.com/downloads/details.aspx?FamilyID=9b2da534-3e03-4391-8a4d-074b9f2bc1bf%20
+	产品首页：http://www.ncmem.com/webapp/scp2/index.aspx
+	控件下载：http://www.ncmem.com/webapp/scp2/pack.aspx
+	示例下载：http://www.ncmem.com/webapp/scp2/versions.aspx
 	联系邮箱：1085617561@qq.com
 	联系QQ：1085617561
 */
-
+function debugMsg(txt){$("#msg").append(txt+"<br/>");}
 //全局对象
 var ScreenCaptureError = {
-	"0": "连接服务器失败"
+	  "0": "就绪"
 	, "1": "发送数据错误"
-	, "2": "未设置上传地址"
-	, "3": "公司未授权"
-	, "4": "域名未授权"
+	, "2": "接收数据错误"
+	, "3": "域名未授权或为空"
+	, "4": "公司未授权或为空"
+	, "5": "nat app error"
+};
+
+var LanguageZhCn = {
+      "CapForm": "截屏选择窗口"
+    , "CapFormTitle": "选择截屏窗口"
+    , "CapFormTip": "请将您想要截取的窗口调整到最前"
+    , "BtnOk": "确定"
+    , "BtnCancel": "取消"
+    , "RectSuze": "区域大小"
+    , "CurRGB": "当前RGB"
+    , "QuckCap": "双击可以快速完成截图"
+};
+var LanguageEn = {
+      "CapForm": "Capture Form Selecter"
+    , "CapFormTitle": "Choose Capture Form"
+    , "CapFormTip": "Please set the window to the front which you want to intercept resize"
+    , "BtnOk": "Ok"
+    , "BtnCancel": "Cancel"
+    , "RectSuze": "Rect Size"
+    , "CurRGB": "Current RGB"
+    , "QuckCap": "Double-click can be quickly completed Screenshot"
+};
+var LanguageZhTw = {
+      "CapForm": "截屏選擇視窗"
+    , "CapFormTitle": "選擇截屏視窗"
+    , "CapFormTip": "請將您想要截取的視窗調整到最前"
+    , "BtnOk": "確定"
+    , "BtnCancel": "取消"
+    , "RectSuze": "區域大小"
+    , "CurRGB": "當前RGB"
+    , "QuckCap": "雙擊可以快速完成截圖"
 };
 
 /*
 	截屏对象管理类，提供常用配置功能
 	参数
-		infDivID 截屏信息层
 */
 function CaptureManager()
 {
@@ -51,371 +68,271 @@ function CaptureManager()
 		,None				: 7
 		,Waiting			: 8
 	};
-	_this.State = _this.StateType.None;
-	_this.Editor = null;
-	this.pluginFF = null;
-	this.pluginIE = null;
-	this.scpPnl = null;//面板
-	this.scpIco = null;//图标
-	this.scpImg = null;//截屏图片显示对象，需要在外部设置
-	this.scpMsg = null;//消息
-	this.scpPer = null;//百分比
-	
+    _this.State = _this.StateType.None;
+    this.websocketInited = false;
+	this.scpFF = null;
+    this.scpIE = null;
+    this.ui = { panel: null, ico: null, img: null, msg: null, per: null ,setup:null};
+    this.event = {
+        postComplete: function (src) { }, hotKey: function () { }
+    };
+
 	//全局配置信息
 	this.Config = {
-		"PostUrl"		: "http://www.ncmem.com/upload.aspx"
-		,"EncodeType"	: "utf-8"
-		, "Version"		: "1,6,74,31253"
+		  "PostUrl"		: "http://www.ncmem.com/upload.aspx"
+		, "EncodeType"	: "utf-8"
+		, "Version"		: "1,4,74,5817"
 		, "Company"		: "荆门泽优软件有限公司"
 		, "License"		: ""
-		, "FileFieldName": "img"//文件字段名称。
-		, "Authenticate": ""//Windows验证方式。basic,ntlm
+        , "Debug"       : false//是否打开调试模式
+        , "LogFile"     : "F:\\log.txt"//日志文件路径
+		, "FileFieldName": "img"//自定义图片文件字段名称。
 		, "Language"	: "zhcn"//语言设置，en,zhcn,tw
-		, "Quality"     : 100//图片质量，仅对jpg格式有效
-		, "ShowForm"    : true//是否显示截屏提示窗口
-		, "IcoPath"		: "/scp/uploading.gif"
+		, "LanCur"	    : LanguageZhCn//语言设置
+		, "Quality"     : 100//jpg图片质量，仅对jpg格式有效
+		, "ShowForm"	: true//是否显示截屏提示窗口
+		, "ImageType"	: "png"//图片上传格式。png,jpg,bmp
+		, "NameCrypto"	: "crc"//名称生成算法。crc,md5,sha1,uuid
+		, "IcoPath"		: "/scp/SL_Uploading.gif"
+        , "Cookie"      : ""
+        , "HotKey"      : "Ctrl+Alt+Q"
+        , "Authenticate": { "type": "ntlm", "name": "", "pass": "" }//域环境信息
         //x86
-		, "Clsid"		: "B10327CB-56EC-43D9-BED0-C91E4AE8F42E"
-		, "ProjID"		: "Xproer.ScreenCapture"
-		, "CabPath"		: "http://www.ncmem.com/download/ScreenCapture/ScreenCapture.cab"
-		//x64
-		, "Clsid64"		: "32CA4868-4024-41a3-AAF3-E5D24897B81A"
-		, "ProjID64"	: "Xproer.ScreenCapture64"
-		, "CabPath64"	: "http://www.ncmem.com/download/ScreenCapture/ScreenCapture64.cab"
-		//FireFox
-		, "MimeType"	: "application/npScreenCapture"
-		, "XpiPath"		: "http://www.ncmem.com/download/ScreenCapture/ScreenCapture.xpi"
-		//Chrome
-		, "CrxName"		: "npScreenCapture"
-		, "MimeTypeChr"	: "application/npScreenCapture"
-		, "CrxPath"		: "http://www.ncmem.com/download/ScreenCapture/ScreenCapture.crx"
+        , ie: {
+              part: { clsid: "9767D337-E10A-4319-8854-E4B0FB635274", name: "Xproer.ScreenCapturePro2" }
+            , path: "http://www.ncmem.com/download/scp2/scp.cab"
+        }
+        //x64
+        , ie64: {
+            part: { clsid: "399B59CE-646E-4430-9000-138DF6515306", name: "Xproer.ScreenCapturePro2x64" }
+            , path: "http://www.ncmem.com/download/scp2/scp64.cab"
+        }
+        , firefox: { name: "", type: "application/npScpPro2", path: "http://www.ncmem.com/download/scp2/scp.xpi" }
+        , chrome: { name: "npScpPro2", type: "application/npScpPro2", path: "http://www.ncmem.com/download/scp2/scp.crx" }
+	    //Chrome 45
+        , chrome45: { name: "com.xproer.down2", path: "http://www.ncmem.com/download/scp2/scp.crx" }
+        , exe: { path: "http://www.ncmem.com/download/scp2/scp.exe" }
+        , edge: {protocol:"scp2",port:9800,visible:false}
+        , "Fields": {"uname": "test","upass": "test","uid":"0","fid":"0"}
 	};
-	
-	//附加对象
-	this.Fields = {
-		 "uname" : "test"
-		,"upass" : "test"
-	};
-
-	//IE浏览器信息管理对象
-	_this.BrowserIE = {
-		"GetHtml": function()
-		{
-			/*ActiveX的静态加载方式，如果在框架页面中使用此控件，推荐使用静态加截方式。
-			<div style="display: none">
-			<object id="objScreenCapture" classid="clsid:B10327CB-56EC-43D9-BED0-C91E4AE8F42E" codebase="http://www.ncmem.com/products/screencapture/demo/ScreenCapture.cab#version=1,6,26,54978" width="1" height="1"></object>
-			</div>
-			*/
-			var acx = '<div style="display: none">';
-			acx += '<object id="objScreenCapture" classid="clsid:' + _this.Config["Clsid"] + '"';
-			acx += ' codebase="' + _this.Config["CabPath"] + '#version=' + _this.Config["Version"] + '" width="1" height="1"></object>';
-			acx += '</div>';
-			
-			//截屏图片上传窗口
-			acx += '<div name="pnlScpUploader" class="CaptureMessage">';
-			acx += '<img alt="进度图标" src="' + _this.Config["IcoPath"] + '" /><span name="msg">图片上传中...</span><span name="process">10%</span>';
-			acx += '</div>';
-			return acx;
-		}
-		, "GetPlugin": function()
-		{
-			return this.plugin;
-		} //检查插件是否已安装
-		, "Check": function()
-		{
-			try
-			{
-				var com = new ActiveXObject(_this.Config["ProjID"]);
-				return true;
-			}
-			catch (e) { return false; }
-		}
-		, "GetChild": function(obj, index) { return obj.children(index); }
-		, "SetText": function(obj, txt) { obj.innerText = txt; }
-		, "Init": function () { this.plugin = _this.pluginIE; }
-       	, "plugin": null
-	};
-	//FireFox浏览器信息管理对象
-	_this.BrowserFF = {
-		"GetHtml": function()
-		{
-			var html = '<embed type="' + _this.Config["MimeType"] + '" pluginspage="' + _this.Config["XpiPath"] + '" width="1" height="1" id="objScreenCapture">';
-			//截屏图片上传窗口
-			html += '<div name="pnlScpUploader" class="CaptureMessage">';
-			html += '<img alt="进度图标" src="' + _this.Config["IcoPath"] + '" /><span name="msg">图片上传中...</span><span name="process">10%</span>';
-			html += '</div>';
-			return html;
-		}
-		, "GetPlugin": function()
-		{
-			return this.plugin;
-		} //检查插件是否已安装
-		, "Check": function()
-		{
-			var mimetype = navigator.mimeTypes;
-			if (typeof mimetype == "object" && mimetype.length) {
-				for (var i = 0; i < mimetype.length; i++) {
-					if (mimetype[i].type == _this.Config["MimeType"].toLowerCase()) {
-						return mimetype[i].enabledPlugin;
-					}
-				}
-			}
-			else {
-				mimetype = [_this.Config["MimeType"]];
-			}
-			if (mimetype) {
-				return mimetype.enabledPlugin;
-			}
-			return false; 
-		} //安装插件
-		, "Setup": function()
-		{
-			var xpi = new Object();
-			xpi["Calendar"] = _this.Config["XpiPath"];
-			InstallTrigger.install(xpi, function(name, result) { });
-		}
-		, "Init": function () { this.plugin = _this.pluginFF; }
-        ,"plugin":null
-	};
-	//Chrome浏览器信息管理对象
-	_this.BrowserChrome =
+	this.postError = function (json)
 	{
-		"GetHtml": function()
-		{
-			var html = '<embed type="' + _this.Config["MimeTypeChr"] + '" pluginspage="' + _this.Config["CabPath"] + '" width="1" height="1" id="objScreenCapture">';
-			//截屏图片上传窗口
-			html += '<div name="pnlScpUploader" class="CaptureMessage">';
-			html += '<img alt="进度图标" src="' + _this.Config["IcoPath"] + '" /><span name="msg">图片上传中...</span><span name="process">10%</span>';
-			html += '</div>';
-			return html;
-		}
-		, "GetPlugin": function()
-		{
-			return this.plugin;
-		} //检查插件是否已安装
-		, "Check": function()
-		{
-			for (var i = 0, l = navigator.plugins.length; i < l; i++)
-			{
-				if (navigator.plugins[i].name == _this.Config["CrxName"])
-				{
-					return true;
-				}
-			}
-			return false;
-		} //安装插件
-		, "Setup": function()
-		{
-			document.write('<iframe style="display:none;" src="' + _this.Config["CabPath"] + '"></iframe>');
-		}
-		, "Init": function () { this.plugin = _this.pluginFF; }
-        ,"plugin":null
+	    this.ui.msg.text(ScreenCaptureError[json.value]);
+	    this.ui.per.text("");
 	};
-	_this.Browser = _this.BrowserIE;
+	this.postProcess = function (json)
+	{
+	    this.ui.per.text(json.percent);
+	};
+	this.postComplete = function (json)
+	{
+	    this.ui.per.text("100%");
+	    this.ui.msg.text("上传完成");
+	    this.CloseMsg(); //隐藏信息层
+        this.event.postComplete(json.value);
+	};
+	this.runComplete = function (json)
+	{
+	    this.Browser.exitCheck();
+	};
+    this.loadComplete = function (json) {
+        if (this.websocketInited) return;
+        this.websocketInited = true;
+
+        //this.CloseMsg();
+	    var needUpdate = true;
+	    if (typeof (json.version) != "undefined") {
+	        if (json.version == this.Config.Version) {
+	            needUpdate = false;
+	        }
+	    }
+        if (needUpdate) this.need_update();
+        else { this.CloseMsg(); }
+	};
+	this.load_complete_edge = function (json) {
+        this.edge_load = true;
+        this.SafeCheck();
+        this.CloseMsg();
+	    _this.app.init();
+	};
+    this.afterCapture = function (json) { this.OpenMsg();/*打开信息面板*/ };
+    this.hotKey = function (json) { this.event.hotKey(); }
+    this.state_message = function (json) { alert(json.msg); }
+	this.recvMessage = function (str)
+	{
+	    var json = JSON.parse(str);
+	    if      (json.name == "AfterCapture") { _this.afterCapture(json); }
+        else if (json.name == "HotKey") { _this.hotKey(json); }
+        else if (json.name == "state_message") { _this.state_message(json); }
+        else if (json.name == "post_process") { _this.postProcess(json); }
+	    else if (json.name == "post_error") { _this.postError(json); }
+	    else if (json.name == "post_complete") { _this.postComplete(json); }
+	    else if (json.name == "run_complete") { _this.runComplete(json); }
+	    else if (json.name == "run_error") { _this.postError(json); }
+	    else if (json.name == "load_complete") { _this.loadComplete(json); }
+	    else if (json.name == "load_complete_edge") { _this.load_complete_edge(json); }
+	};
+    
 	var browserName = navigator.userAgent.toLowerCase();
 	this.ie = browserName.indexOf("msie") > 0;
 	//IE11
 	this.ie = _this.ie ? _this.ie : browserName.search(/(msie\s|trident.*rv:)([\w.]+)/)!=-1;
 	this.firefox = browserName.indexOf("firefox") > 0;
 	this.chrome = browserName.indexOf("chrome") > 0;
+	this.chrome45 = false;
+    this.chrVer = navigator.appVersion.match(/Chrome\/(\d+)/);
+    this.edge = navigator.userAgent.indexOf("Edge") > 0;
+    this.edgeApp = new WebServerScp2(this);
+    this.app = scp_app;
+    this.app.edgeApp = this.edgeApp;
+    this.app.Config = this.Config;
+    this.app.ins = this;
+    if (this.edge) { this.ie = this.firefox = this.chrome = this.chrome45 = false; }
 
-	if ( this.ie )
-	{
-		//Win64
-		if (window.navigator.platform == "Win64")
-		{
-			this.Config["Clsid"] = this.Config["Clsid64"];
-			this.Config["ProjID"] = this.Config["ProjID64"];
-			this.Config["CabPath"] = this.Config["CabPath64"];
-		}
-	} //Firefox
-	else if ( this.firefox )
-	{
-		_this.Config["CabPath"] = _this.Config["XpiPath"];
-		_this.Browser = this.BrowserFF;
-		if (!_this.Browser.Check()) {_this.Browser.Setup();}
+    //Win64
+    if (window.navigator.platform == "Win64")
+    {
+        jQuery.extend(this.Config.ie, this.Config.ie64);
+    } //Firefox
+    if (this.firefox)
+    {
+        if (!this.app.checkFF())//仍然支持npapi
+        {
+            this.edge = true;
+            this.app.postMessage = this.app.postMessageEdge;
+            this.edgeApp.run = this.edgeApp.runChr;
+        }
 	} //chrome
-	else if ( this.chrome )
-	{
-		_this.Config["CabPath"] = _this.Config["CrxPath"];
-		_this.Browser = this.BrowserChrome;
-		if (!_this.Browser.Check()) {_this.Browser.Setup();}
+	else if (this.chrome)
+    {
+        this.app.check = this.app.checkFF;
+        jQuery.extend(this.Config.firefox, this.Config.chrome);
+	    //44+版本使用Native Message
+        if (parseInt(this.chrVer[1]) >= 44) {
+            _this.firefox = true;
+            if (!this.app.checkFF())//仍然支持npapi
+            {
+                this.edge = true;
+                this.app.postMessage = this.app.postMessageEdge;
+                this.edgeApp.run = this.edgeApp.runChr;
+            }
+        }
     }
-    
+    else if (this.edge)
+    {
+        this.app.postMessage = this.app.postMessageEdge;
+    }
+
 	this.GetHtml = function ()
 	{
         //ff
-	    var html = '<embed type="' + this.Config["MimeTypeChr"] + '" pluginspage="' + this.Config["CabPath"] + '" width="1" height="1" name="scpFF">';
+        var html = '<embed name="scpFF" type="' + this.Config.firefox.type + '" pluginspage="' + this.Config.firefox.path + '" width="1" height="1">';
+        if (this.chrome45) html = '';
         //ie
-	    html += '<object name="scpIE" classid="clsid:' + this.Config["Clsid"] + '"';
-	    html += ' codebase="' + this.Config["CabPath"] + '#version=' + this.Config["Version"] + '" width="1" height="1"></object>';
+	    //html += '<div style="display: none">';
+	    html += '<object name="scpIE" classid="clsid:' + this.Config.ie.part.clsid + '"';
+	    html += ' codebase="' + this.Config.ie.path + '#version=' + this.Config["Version"] + '" width="1" height="1"></object>';
+        if (this.edge) html = '';
+	    //html += '</div>';
 	    //
-	    html += '<div name="pnl" class="scpPanel">\
+        html += '<div name="ui-scp" class="panel-scp">\
 	                <img name="ico" alt="进度图标" src="/ScreenCapture/process.gif" /><span name="msg">图片上传中...</span><span name="per">10%</span>\
 	            </div>';
+        //安装提示
+        html += '<div name="ui-setup" class="panel-scp panel-setup"></div>';
 	    return html;
 	};
 
-	this.Load = function()
+
+    //安全检查，在用户关闭网页时自动停止所有上传任务。
+    this.SafeCheck = function (event) {
+        //$(window).bind("beforeunload", function (event) {});
+        $(window).bind("unload", function () {
+            if (this.edge) _this.edgeApp.close();
+        });
+    };
+	this.setup_tip = function ()
+    {
+        this.ui.setup.skygqbox();
+        var dom = this.ui.setup.html("控件加载中，如果未加载成功请先<a name='w-exe'>安装控件</a>");
+        var lnk = dom.find('a[name="w-exe"]');
+        lnk.attr("href", this.Config.exe.path);
+    };
+    this.need_update = function () {
+        var dom = this.ui.setup.html("发现新版本，请<a name='w-exe' href='#'>更新</a>");
+        var lnk = dom.find('a[name="w-exe"]');
+        lnk.attr("href", this.Config.exe.path);
+    };
+
+    //加载到document.body中
+	this.loadAuto= function()
 	{
 	    var ui = $(document.body).append(this.GetHtml());
-	    this.pluginFF = ui.find('embed[name="scpFF"]').get(0);
-	    this.pluginIE = ui.find('object[name="scpIE"]').get(0);
-	    this.scpPnl = ui.find('div[name="pnl"]');
-	    this.scpIco = ui.find('img[name="ico"]').attr("src", this.Config["IcoPath"]);
-	    this.scpMsg = ui.find('span[name="msg"]');
-	    this.scpPer = ui.find('span[name="per"]');
-
-	    this.Browser.Init();
-	    this.Init();
-	};
+        this.initUI(ui);
+    };
 	
 	//加截到指定对象内部
-	this.LoadTo = function(oid)
+	this.load_to = function(oid)
 	{
 	    var ui = $("#" + oid).append(this.GetHtml());
-	    this.pluginFF   = ui.find('embed[name="scpFF"]').get(0);
-	    this.pluginIE   = ui.find('object[name="scpIE"]').get(0);
-	    this.scpPnl     = ui.find('div[name="pnl"]');
-	    this.scpIco     = ui.find('img[name="ico"]').attr("src",this.Config["IcoPath"]);
-	    this.scpMsg     = ui.find('span[name="msg"]');
-	    this.scpPer     = ui.find('span[name="per"]');
+        this.initUI(ui);
+    };
 
-	    this.Browser.Init();
-	    this.Init();
-	};
-	
-	this.SetEditor = function(edt){this.Editor = edt;};
+    this.initUI = function (ui)
+    {
+        this.parter = ui.find('embed[name="scpFF"]').get(0);
+        this.scpIE = ui.find('object[name="scpIE"]').get(0);
+        this.ui.panel = ui.find('div[name="ui-scp"]');
+        this.ui.ico = ui.find('img[name="ico"]').attr("src", this.Config["IcoPath"]);
+        this.ui.msg = ui.find('span[name="msg"]');
+        this.ui.per = ui.find('span[name="per"]');
+        this.ui.setup = ui.find('div[name="ui-setup"]');
 
-	//加载CAB控件
-	//this.Load();
-
-	this.Init = function()
-	{
-		//this.Editor = edt;
-		//插件名称
-		_this.ATL = _this.Browser.GetPlugin();
-		_this.ATL.Object = this;
-		_this.ATL.License = _this.Config["License"];
-		_this.ATL.PostUrl = _this.Config["PostUrl"];
-		_this.ATL.EncodeType = _this.Config["EncodeType"];
-		_this.ATL.Language = _this.Config["Language"];
-		_this.ATL.Quality = _this.Config["Quality"];
-		_this.ATL.ShowForm = _this.Config["ShowForm"];
-		_this.ATL.Company = _this.Config["Company"];
-		_this.ATL.FileFieldName = _this.Config["FileFieldName"];
-		_this.ATL.Authenticate = _this.Config["Authenticate"];
-		_this.ATL.Cookie = document.cookie;
-		_this.ATL.OnComplete = ScreenCapture_Complete;
-		_this.ATL.OnPost = ScreenCapture_OnProcess;
-		_this.ATL.OnStop = ScreenCapture_Stop;
-		_this.ATL.OnError = ScreenCapture_OnError;
-		_this.ATL.OnConnected = ScreenCapture_Connected;
-		_this.ATL.AfterCapture = ScreenCapture_AfterCapture;
-		//
-	};
+        $(function () {
+            if (!_this.edge) {
+                if (_this.ie) {
+                    _this.parter = _this.scpIE;
+                }
+                _this.parter.recvMessage = _this.recvMessage;
+            }
+            _this.setup_tip();
+            if (_this.edge) {
+                _this.edgeApp.run();
+            }
+            else {
+                _this.app.init();
+            }
+        });
+    };
 
 	//截屏函数
-	this.Capture = function()
-	{
-		_this.ATL.ClearFields();//清除附加字段
-		var pname;
-		for (pname in _this.Fields)
-		{
-			_this.ATL.AddField(pname, _this.Fields[pname]);
-		}
-		_this.ATL.Capture();
-	};
-	
+    this.Capture = function () {
+        if (!this.websocketInited) {
+            alert("控件没有安装或初始化成功，请重新安装");
+            return;
+        }
+        var opt = { autoHide: false};//自动隐藏当前窗口
+        this.app.capture(opt);
+    };
+    this.Capture2 = function () {
+        if (!this.websocketInited) {
+            alert("控件没有安装或初始化成功，请重新安装");
+            return;
+        }
+        var opt = { form: false };//不显示提示窗口
+        this.app.capture(opt);
+    };
+    //自动隐藏当前窗口
+    this.CaptureHide = function () {        
+        var opt = { autoHide: true};//自动隐藏当前窗口
+        this.app.capture(opt);};
 	//截取整个屏幕
-	this.CaptureScreen = function()
-	{
-		_this.ATL.ClearFields(); //清除附加字段
-		var pname;
-		for (pname in _this.Fields)
-		{
-			_this.ATL.AddField(pname, _this.Fields[pname]);
-		}
-		_this.ATL.CaptureScreen();
+	this.CaptureScreen = function(){this.app.captureScreen();};
+	//截取指定区域
+	this.CaptureRect = function(x,y,w,h){this.app.captureRect(x, y, w, h);};
+    this.OpenMsg = function () {
+        _this.ui.panel.skygqbox();	    
+	    _this.ui.msg.text("图片上传中...");
 	};
-
-	this.OpenInfPanel = function()
-	{
-	    _this.scpPnl.skygqbox();
-	};
-
-	this.CloseInfPanel = function()
-	{
-	    $('#wrapClose').click();
-	};
-
-	//添加到编辑器
-	this.InsertToEditor = function(src)
-	{
-		var img = '<img src="';
-		img += src;
-		img += '"/>';
-		//this.Editor.InsertHtml(img);
-		this.Editor.execCommand("insertHtml", img);
-	};
-}
-
-//事件-连接成功
-function ScreenCapture_Connected(obj)
-{
-	obj.scpPer.text("10%");
-	obj.State = obj.StateType.Posting;
-}
-
-//事件-传输完毕
-function ScreenCapture_Complete(obj)
-{
-	obj.scpPer.text("100%");
-	obj.scpMsg.text("上传完成");
-	obj.State = obj.StateType.Complete;
-	obj.CloseInfPanel(); //隐藏信息层
-	//添加到编辑器
-	obj.InsertToEditor(obj.ATL.Response);
-}
-
-/*
-	事件-传输中....
-	参数:
-		obj		JS对象
-		speed	传输速度
-		postedLength 已传输长度。1Byte,1KB,1MB,1GB
-		percent 上传百分比
-		time 剩余时间
-*/
-function ScreenCapture_OnProcess(obj,speed,postedLength,percent,time)
-{
-	obj.scpPer.text(percent);
-	//obj.pProcess.style.width = arguments[3] + "%";
-	//obj.pMsg.innerText = "已上传:" + arguments[2];
-	//obj.pMsg.innerText += " 速度:" + arguments[1] + "/s";
-	//obj.pMsg.innerText += " 剩余时间:" + arguments[4];
-}
-
-//事件-传输停止
-function ScreenCapture_Stop(obj)
-{
-	obj.State = obj.StateType.Stop;
-}
-/*
-	事件-传输错误
-	参数:
-		obj
-		errCode
-*/
-function ScreenCapture_OnError(obj,errCode)
-{
-	obj.scpMsg.text(ScreenCaptureError[errCode]);
-	obj.scpPer.text( "");
-	//obj.pButton.innerText = "重试";
-	obj.State = obj.StateType.Error;
-}
-
-function ScreenCapture_AfterCapture(obj)
-{
-	obj.OpenInfPanel();//打开信息面板
+	this.CloseMsg = function(){$.skygqbox.hide();};
 }
