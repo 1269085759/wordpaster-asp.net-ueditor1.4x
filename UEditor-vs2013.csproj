@@ -160,6 +160,7 @@
     <Content Include="index-scp.htm" />
     <Content Include="index-vue.html" />
     <Content Include="index.aspx" />
+    <Content Include="index2.htm" />
     <Content Include="lang\en\en.js" />
     <Content Include="lang\en\images\addimage.png" />
     <Content Include="lang\en\images\alldeletebtnhoverskin.png" />
