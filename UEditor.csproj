@@ -148,6 +148,10 @@
     <Content Include="dialogs\wordimage\imageUploader.swf" />
     <Content Include="dialogs\wordimage\wordimage.html" />
     <Content Include="dialogs\wordimage\wordimage.js" />
+    <Content Include="index-scp.htm" />
+    <Content Include="index-vue.html" />
+    <Content Include="index.aspx" />
+    <Content Include="index2.htm" />
     <Content Include="lang\en\en.js" />
     <Content Include="lang\en\images\addimage.png" />
     <Content Include="lang\en\images\alldeletebtnhoverskin.png" />
@@ -172,9 +176,24 @@
     <Content Include="lang\zh-cn\images\music.png" />
     <Content Include="lang\zh-cn\images\upload.png" />
     <Content Include="lang\zh-cn\zh-cn.js" />
+    <Content Include="scp\scp.app.js" />
+    <Content Include="scp\scp.css" />
+    <Content Include="scp\scp.edge.js" />
+    <Content Include="scp\scp.js" />
+    <Content Include="scp\screencapture.gif" />
+    <Content Include="scp\SL_Uploading.gif" />
+    <Content Include="scp\uploading.gif" />
+    <Content Include="vue.min.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
     <Compile Include="net\Uploader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="upload.aspx.cs">
@@ -248,27 +267,17 @@
     <Content Include="ueditor.config.js" />
     <Content Include="ueditor.parse.js" />
     <Content Include="upload.aspx" />
+    <Content Include="WordPaster\css\ico.png" />
     <Content Include="WordPaster\css\paster.png" />
-    <Content Include="WordPaster\css\ui-lightness\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
-    <Content Include="WordPaster\css\ui-lightness\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
-    <Content Include="WordPaster\css\ui-lightness\images\ui-bg_flat_10_000000_40x100.png" />
-    <Content Include="WordPaster\css\ui-lightness\images\ui-bg_glass_100_f6f6f6_1x400.png" />
-    <Content Include="WordPaster\css\ui-lightness\images\ui-bg_glass_100_fdf5ce_1x400.png" />
-    <Content Include="WordPaster\css\ui-lightness\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="WordPaster\css\ui-lightness\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
-    <Content Include="WordPaster\css\ui-lightness\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
-    <Content Include="WordPaster\css\ui-lightness\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
-    <Content Include="WordPaster\css\ui-lightness\images\ui-icons_222222_256x240.png" />
-    <Content Include="WordPaster\css\ui-lightness\images\ui-icons_228ef1_256x240.png" />
-    <Content Include="WordPaster\css\ui-lightness\images\ui-icons_ef8c08_256x240.png" />
-    <Content Include="WordPaster\css\ui-lightness\images\ui-icons_ffd27a_256x240.png" />
-    <Content Include="WordPaster\css\ui-lightness\images\ui-icons_ffffff_256x240.png" />
-    <Content Include="WordPaster\css\ui-lightness\jquery-ui-1.8.11.custom.css" />
     <Content Include="WordPaster\css\WordPaster.css" />
     <Content Include="WordPaster\error.png" />
-    <Content Include="WordPaster\js\jquery-1.5.1.min.js" />
-    <Content Include="WordPaster\js\jquery-ui-1.8.11.custom.min.js" />
-    <Content Include="WordPaster\js\jquery.min.js" />
+    <Content Include="WordPaster\js\jquery-1.4.min.js" />
+    <Content Include="WordPaster\js\json2.min.js" />
+    <Content Include="WordPaster\js\skygqbox.css" />
+    <Content Include="WordPaster\js\skygqbox.js" />
+    <Content Include="WordPaster\js\w.app.js" />
+    <Content Include="WordPaster\js\w.edge.js" />
+    <Content Include="WordPaster\js\w.file.js" />
     <Content Include="WordPaster\js\WordPaster.js" />
     <Content Include="WordPaster\setup\1.gif" />
     <Content Include="WordPaster\setup\2.gif" />
