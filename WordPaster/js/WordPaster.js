@@ -1,7 +1,8 @@
 ﻿/*
-	版权所有 2009-2017 荆门泽优软件有限公司 保留所有版权。
-	官网：http://www.ncmem.com/
-    论坛：http://bbs.ncmem.com/
+	版权所有 2009-2019 荆门泽优软件有限公司 保留所有版权。
+	产品：http://www.ncmem.com/webapp/wordpaster/index.aspx
+    控件：http://www.ncmem.com/webapp/wordpaster/pack.aspx
+    示例：http://www.ncmem.com/webapp/wordpaster/versions.aspx
     版本：2.2
     更新记录：
 		2012-07-04 增加对IE9的支持。
@@ -152,6 +153,7 @@ function WordPasterManager()
 	    if (!this.app.supportFF() || parseInt(this.ffVer[1]) >= 50)//仍然支持npapi
         {
             this.app.postMessage = this.app.postMessageEdge;
+            this.edgeApp.run = this.edgeApp.runChr;
             this.edge = true;
         }
 	} //chrome
