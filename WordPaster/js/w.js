@@ -3,7 +3,7 @@
 	产品：http://www.ncmem.com/webapp/wordpaster/index.aspx
     控件：http://www.ncmem.com/webapp/wordpaster/pack.aspx
     示例：http://www.ncmem.com/webapp/wordpaster/versions.aspx
-    版本：2.3
+    版本：2.4
     更新记录：
 		2012-07-04 增加对IE9的支持。
 */
@@ -232,7 +232,7 @@ function WordPasterManager()
         //安装提示
         acx += '<div name="ui-setup" class="panel-paster panel-setup"></div>';
 	    //图片批量上传窗口
-	    acx += '<div name="filesPanel" class="panel-files" style="display: none;"></div>';
+        acx += '<div name="filesPanel" class="panel-files" style="display: none;"></div>';
 	    //
 	    acx += '<div style="display: none;">';
 
@@ -496,7 +496,6 @@ function WordPasterManager()
 	    {
 	        this.addImgLoc(json.imgs[i]);
 	    }
-	    this.OpenDialogFile();
 	};
 	this.WordParser_PasteExcel = function (json)
 	{
@@ -512,7 +511,8 @@ function WordPasterManager()
 	{
 	    this.postType = WordPasteImgType.word;
 	    this.InsertHtml(json.word);//
-	    this.working = false;
+        this.working = false;
+        this.CloseDialogFile();
 	};
 	this.WordParser_PasteFiles = function (json)
 	{
@@ -607,6 +607,8 @@ function WordPasterManager()
         else if (json.value == "process_data_end")
         {
             this.filesPanel.text("");
+        }
+        else if (json.value == "parse_empty") {
             this.CloseDialogFile();
         }
     };

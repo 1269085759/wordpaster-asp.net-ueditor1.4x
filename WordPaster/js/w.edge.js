@@ -5,9 +5,11 @@
     this.socket = null;
     this.tryConnect = true;
     this.exit = false;
+    this.runed = false;
 
     this.run = function ()
     {
+        if (this.runed) return;
         if (typeof navigator.msLaunchUri != 'undefined')
         {
             console.log(mgr.Config.edge.protocol + "://" + mgr.Config.edge.port);
@@ -22,6 +24,7 @@
                 console.log('启动失败');
             });
             setTimeout(function () { _this.connect() }, 1000);//启动定时器
+            _this.runed = true;
         }
     };
     this.runChr = function () {
