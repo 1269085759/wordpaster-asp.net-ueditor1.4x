@@ -11,17 +11,19 @@
     <link type="text/css" rel="Stylesheet" href="WordPaster/js/skygqbox.css" />
     <script type="text/javascript" src="WordPaster/js/json2.min.js" charset="utf-8"></script>
     <script type="text/javascript" src="WordPaster/js/jquery-1.4.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="WordPaster/js/skygqbox.js" charset="utf-8"></script>
     <script type="text/javascript" src="WordPaster/js/w.edge.js" charset="utf-8"></script>
     <script type="text/javascript" src="WordPaster/js/w.app.js" charset="utf-8"></script>
     <script type="text/javascript" src="WordPaster/js/w.file.js" charset="utf-8"></script>
     <script type="text/javascript" src="WordPaster/js/w.js" charset="utf-8"></script>
-    <script type="text/javascript" src="WordPaster/js/skygqbox.js" charset="utf-8"></script>
 </head>
 <body>
+    <p><a target="_blank" href="index2.htm">多编辑器示例</a></p>
+    <p><a target="_blank" href="index-vue.htm">vue示例</a></p>
 	<textarea name="后台取值的key" id="myEditor">这里写你的初始化内容</textarea>
 	<script type="text/javascript">
 	    var pasterMgr = new WordPasterManager();
-	    pasterMgr.Config["PostUrl"] = "http://localhost:1762/upload.aspx"
+	    pasterMgr.Config["PostUrl"] = "http://localhost:8891/upload.aspx"
 	    pasterMgr.Config["Cookie"] = 'ASP.NET_SessionId=<%=Session.SessionID%>';
 	    pasterMgr.Load();//加载控件
 
