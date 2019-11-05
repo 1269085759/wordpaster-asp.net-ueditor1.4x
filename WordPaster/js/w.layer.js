@@ -3,7 +3,7 @@
 	产品：http://www.ncmem.com/webapp/wordpaster/index.aspx
     控件：http://www.ncmem.com/webapp/wordpaster/pack.aspx
     示例：http://www.ncmem.com/webapp/wordpaster/versions.aspx
-    版本：2.4
+    版本：2.4.1
     更新记录：
 		2012-07-04 增加对IE9的支持。
 */
@@ -23,6 +23,7 @@ var WordPasterError = {
 	, "10": "文件大小超出限制"
 	, "11": "不能设置回调函数"
 	, "12": "Native控件错误"
+	, "13": "Word图片数量超过限制"
 };
 var WordPasterConfig = {
 	"EncodeType"		    : "GB2312"
@@ -41,7 +42,7 @@ var WordPasterConfig = {
 	, "ThumbHeight"		    : "0"	//缩略图高度。0表示不使用缩略图
 	, "FileFieldName"		: "file"//自定义文件名称名称
     , "ImageMatch"		    : ""//服务器返回数据匹配模式，正则表达式，提取括号中的地址
-    , "FormulaDraw"		    : "gdi"//公式图片绘制器，gdi,magick
+    , "FileCountLimit"		: 300//图片数量限制
     , "AppPath"			    : ""
 	, "Cookie"			    : ""
     , "Servers"             :[{"url":"www.ncmem.com"},{"url":"www.xproerui.com"}]//内部服务器地址(不下载此地址中的图片)
@@ -113,6 +114,7 @@ function WordPasterManager()
     //已上传图片列表
     //模型：LocalUrl:ServerUrl
 	this.UploaderListCount = 0; //上传项总数
+	this.dialogOpened=false;
 	this.fileMap = new Object();//文件映射表。
 	this.postType = WordPasteImgType.word;//默认是word
 	this.working = false;//正在上传中
@@ -182,11 +184,10 @@ function WordPasterManager()
         lnk.attr("href", this.Config["ExePath"]);
         this.layerTip = layer.open({
             type: 1,
-            title: false,
-            closeBtn: [1,true],
-            area: ['170px', '70px'],
-            border: [5, 0.3, '#000'],
-            shade:[0],
+            title: "安装提示",
+            closeBtn: 1,
+            area: ['170px', '113px'],
+            skin: 'layui-layer-nobg',
             content: _this.ui.setup
         });
     };
@@ -197,11 +198,10 @@ function WordPasterManager()
         lnk.attr("href", this.Config["ExePath"]);
         this.layerTip = layer.open({
             type: 1,
-            title: false,
-            closeBtn: [1, true],
-            area: ['170px', '70px'],
-            border: [5, 0.3, '#000'],
-            shade: [0],
+            title: "更新提示",
+            closeBtn: 1,
+            area: ['170px', '113px'],
+            skin: 'layui-layer-nobg',
             content: _this.ui.setup
         });
     };
@@ -333,8 +333,7 @@ function WordPasterManager()
 
     //打开图片上传对话框
 	this.OpenDialogFile = function ()
-    {
-        this.working = true;
+	{
         this.layerImgs = layer.open({
             type: 1,
             title: "图片上传窗口",
@@ -350,27 +349,33 @@ function WordPasterManager()
         });
 	};
 	this.CloseDialogFile = function ()
-    {
+	{
         layer.close(this.layerImgs);
 	};
 
-    this.layerPaste = 0;
     //打开粘贴图片对话框
 	this.OpenDialogPaste = function ()
 	{
+		if(!this.dialogOpened)
         this.layerPaste = layer.open({
             type: 1,
-            title: false,
+            title: "上传进度",
             closeBtn: 1,
-            area: ['150px', '70px'],
+            area: ['500px', '107px'],
             skin: 'layui-layer-nobg',
             shadeClose: false,
-            content: _this.imgPasterDlg
+            content: _this.imgPasterDlg,
+            cancel: function(){
+        		if(_this.working)return false;
+        		return true;
+        		_this.dialogOpened=false;
+        	} 
         });
 	};
 	this.CloseDialogPaste = function ()
 	{
         layer.close(this.layerPaste);
+        this.dialogOpened=false;
 	};
 	this.InsertHtml = function (html)
 	{
@@ -400,14 +405,17 @@ function WordPasterManager()
 	    if (!this.chrome45 && !_this.edge)
 	    {
 
+		this.working=true;
             this.app.paste();
 	    }
 	    else if (this.chrome45)
 	    {
+	    	this.working=true;
             this.app.paste();
 	    }
 	    else if(this.edge)
 	    {
+	    	this.working=true;
             this.app.paste();
 	    }
 	};
@@ -594,9 +602,11 @@ function WordPasterManager()
 	};
 	this.WordParser_PostError = function (json)
 	{
-	    this.imgMsg.text(WordPasterError[json.value]);
-	    this.imgIco.src = this.Config["IcoError"];
+		this.OpenDialogPaste();
+		this.imgMsg.html(WordPasterError[json.value+'']+"<br/>PostUrl:"+this.Config["PostUrl"]+"<br/>License:"+this.Config["License"]+"<br/>当前url:"+window.location.href);
+	    this.imgIco.attr("src",this.Config["IcoError"]);
 	    this.imgPercent.text("");
+	    this.working = false;
 	};
 	this.File_PostComplete = function (json)
 	{
@@ -631,6 +641,12 @@ function WordPasterManager()
 	this.load_complete_edge = function (json)
 	{
         _this.app.init();
+    };
+    this.imgs_out_limit = function (json) {
+        layer.alert(WordPasterError["13"] + "<br/>文档图片数量：" + json.imgCount + "<br/>限制数量：" + json.imgLimit, { icon: 2 });
+    };
+    this.url_unauth = function (json) {
+        layer.alert(WordPasterError["9"] + "<br/>PostUrl：" + json.url, { icon: 2 });
     };
     this.state_change = function (json) {
         if (json.value == "parse_document")
@@ -683,5 +699,7 @@ function WordPasterManager()
 	    else if (json.name == "Queue_Complete") _this.Queue_Complete(json);
 	    else if (json.name == "load_complete_edge") _this.load_complete_edge(json);
         else if (json.name == "state_change") _this.state_change(json);
+        else if (json.name == "imgs_out_limit") _this.imgs_out_limit(json);
+        else if (json.name == "url_unauth") _this.url_unauth(json);
 	};
 }

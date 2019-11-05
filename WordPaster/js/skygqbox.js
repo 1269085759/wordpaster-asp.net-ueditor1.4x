@@ -207,7 +207,8 @@
 		return $.o.out;
 	};
 	$.skygqbox.hide = function(){
-		if($.o.ele && $.o.out.size() && $.o.bg.size()){
+		if($.o.ele && $.o.out.size() && $.o.bg.size())
+		{
 			$.o.ele.clone(true).appendTo($("body")).hide();
 			$.o.out.fadeOut("fast", function(){
 				$(this).remove();
@@ -215,6 +216,7 @@
 			$.o.bg.fadeOut("fast", function(){
 				$(this).remove();
 			});
+			$.o.s.onclose();//
 		}
 		return false;
 	};
@@ -226,6 +228,7 @@
 		width		: "auto",
 		height		: "auto",
 		autoClose	: 0,//弹出层等待多长时间自动关闭(单位：毫秒) 0或者负数不触发自动关闭
-		position	: "middle"
+		position	: "middle",
+		onclose:function(){}
 	};
 })(jQuery);

@@ -18,7 +18,7 @@ div.UploaderItem div.ProcessNum{width:30px; height:14px; line-height:14px; margi
 div.UploaderItem a.Btn,div.UploaderItem a.Btn:hover{text-decoration: underline; color:#244281; height:12px;display:block;}
 
 /*图片粘贴控件消息样式*/
-.panel-paster{font-family: 新宋体;font-size: 12px; background-color: #FFFFFF; height: 50px; width: 150px;}
+.panel-paster{font-family: 新宋体;font-size: 12px; background-color: #FFFFFF; height: 100%; width: 100%;}
 .panel-paster img{ float:left; border:0;}
 .panel-paster span{ float:left;}
 .panel-setup {padding:10px;display:none;}

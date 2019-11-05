@@ -3,7 +3,7 @@
 	产品：http://www.ncmem.com/webapp/wordpaster/index.aspx
     控件：http://www.ncmem.com/webapp/wordpaster/pack.aspx
     示例：http://www.ncmem.com/webapp/wordpaster/versions.aspx
-    版本：2.4
+    版本：2.4.1
     更新记录：
 		2012-07-04 增加对IE9的支持。
 */
@@ -23,6 +23,7 @@ var WordPasterError = {
 	, "10": "文件大小超出限制"
 	, "11": "不能设置回调函数"
 	, "12": "Native控件错误"
+	, "13": "Word图片数量超过限制"
 };
 var WordPasterConfig = {
 	"EncodeType"		    : "GB2312"
@@ -41,7 +42,7 @@ var WordPasterConfig = {
 	, "ThumbHeight"		    : "0"	//缩略图高度。0表示不使用缩略图
 	, "FileFieldName"		: "file"//自定义文件名称名称
     , "ImageMatch"		    : ""//服务器返回数据匹配模式，正则表达式，提取括号中的地址
-    , "FormulaDraw"		    : "gdi"//公式图片绘制器，gdi,magick
+    , "FileCountLimit"		: 300//图片数量限制
     , "AppPath"			    : ""
 	, "Cookie"			    : ""
     , "Servers"             :[{"url":"www.ncmem.com"},{"url":"www.xproerui.com"}]//内部服务器地址(不下载此地址中的图片)
@@ -113,6 +114,7 @@ function WordPasterManager()
     //已上传图片列表
     //模型：LocalUrl:ServerUrl
 	this.UploaderListCount = 0; //上传项总数
+	this.dialogOpened=false;
 	this.fileMap = new Object();//文件映射表。
 	this.postType = WordPasteImgType.word;//默认是word
 	this.working = false;//正在上传中
@@ -328,11 +330,17 @@ function WordPasterManager()
     //打开粘贴图片对话框
 	this.OpenDialogPaste = function ()
 	{
-	    _this.imgPasterDlg.skygqbox();
+        if (!this.dialogOpened) {
+            _this.imgPasterDlg.skygqbox({onclose:function(){
+            	_this.dialogOpened = false;
+            }});
+            this.dialogOpened = true;
+        }
 	};
 	this.CloseDialogPaste = function ()
 	{
 		$.skygqbox.hide();
+        this.dialogOpened = false;
 	};
 	this.InsertHtml = function (html)
 	{
@@ -530,6 +538,11 @@ function WordPasterManager()
 	    this.imgMsg.text("开始上传");
 	    this.imgPercent.text("1%");
 	};
+    this.show_msg = function (msg) {
+        this.OpenDialogPaste();
+        this.imgMsg.html(msg);
+        this.imgPercent.text("");
+    };
 	this.WordParser_PasteAuto = function (json)
 	{
 	    this.postType = WordPasteImgType.network;
@@ -556,9 +569,9 @@ function WordPasterManager()
 	};
 	this.WordParser_PostError = function (json)
 	{
-	    this.OpenDialogPaste();
-	    this.imgMsg.text(WordPasterError[json.value]);
-	    this.imgIco.src = this.Config["IcoError"];
+		this.OpenDialogPaste();
+		this.imgMsg.html(WordPasterError[json.value]+"<br/>PostUrl:"+this.Config["PostUrl"]+"<br/>License:"+this.Config["License"]+"<br/>当前url:"+window.location.href);
+	    this.imgIco.attr("src",this.Config["IcoError"]);
 	    this.imgPercent.text("");
 	};
 	this.File_PostComplete = function (json)
@@ -594,6 +607,12 @@ function WordPasterManager()
 	this.load_complete_edge = function (json)
 	{
         _this.app.init();
+    };
+    this.imgs_out_limit = function (json) {
+        this.show_msg(WordPasterError["13"] + "<br/>文档图片数量：" + json.imgCount + "<br/>限制数量：" + json.imgLimit);
+    };
+    this.url_unauth = function (json) {
+        this.show_msg(WordPasterError["9"] + "<br/>PostUrl：" + json.url);
     };
     this.state_change = function (json) {
         if (json.value == "parse_document")
@@ -647,5 +666,7 @@ function WordPasterManager()
 	    else if (json.name == "Queue_Complete") _this.Queue_Complete(json);
 	    else if (json.name == "load_complete_edge") _this.load_complete_edge(json);
         else if (json.name == "state_change") _this.state_change(json);
+        else if (json.name == "imgs_out_limit") _this.imgs_out_limit(json);
+        else if (json.name == "url_unauth") _this.url_unauth(json);
 	};
 }
