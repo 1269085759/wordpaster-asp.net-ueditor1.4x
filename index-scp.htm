@@ -6,7 +6,7 @@
 	<script type="text/javascript" src="ueditor.config.js" charset="utf-8"></script>
     <script type="text/javascript" src="ueditor.all.js" charset="utf-8"></script>
     <!--<script type="text/javascript" src="ueditor.all.min.js" charset="utf-8"></script>-->
-	<link type="text/css" rel="Stylesheet" href="WordPaster/WordPaster.css"/>
+	<link type="text/css" rel="Stylesheet" href="WordPaster/css/WordPaster.css"/>
     <link type="text/css" rel="Stylesheet" href="scp/scp.css" />
     <link type="text/css" rel="Stylesheet" href="WordPaster/js/skygqbox.css" />
     <script type="text/javascript" src="WordPaster/js/json2.min.js" charset="utf-8"></script>
@@ -25,12 +25,12 @@
     <div id="scpPanel"></div>
 	<script type="text/javascript">
         var pasterMgr = new WordPasterManager();
-    	pasterMgr.Config["PostUrl"] = "http://localhost:1762/upload.aspx"
+        pasterMgr.Config["PostUrl"] = "http://localhost:8891/upload.aspx"
     	pasterMgr.Load();//加载控件
 
         var editor = null;
     	var scpMgr = new CaptureManager();
-    	scpMgr.Config["PostUrl"] = "http://localhost:1762/upload.aspx";
+        scpMgr.Config["PostUrl"] = "http://localhost:8891/upload.aspx";
         scpMgr.event.postComplete = function (url) {
             var img = '<img src="' + url + "?t=" + new Date().getTime() + '"/>';
             editor.execCommand("insertHtml", img);

@@ -10,11 +10,11 @@
     <link type="text/css" rel="Stylesheet" href="WordPaster/js/skygqbox.css" />
     <script type="text/javascript" src="WordPaster/js/json2.min.js" charset="utf-8"></script>
     <script type="text/javascript" src="WordPaster/js/jquery-1.4.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="WordPaster/js/skygqbox.js" charset="utf-8"></script>
     <script type="text/javascript" src="WordPaster/js/w.edge.js" charset="utf-8"></script>
     <script type="text/javascript" src="WordPaster/js/w.app.js" charset="utf-8"></script>
     <script type="text/javascript" src="WordPaster/js/w.file.js" charset="utf-8"></script>
     <script type="text/javascript" src="WordPaster/js/w.js" charset="utf-8"></script>
-    <script type="text/javascript" src="WordPaster/js/skygqbox.js" charset="utf-8"></script>
     <script type="text/javascript" src="vue.min.js" charset="utf-8"></script>
 </head>
 <body>
@@ -34,7 +34,7 @@
             },
             mounted() {
                 this.wdp = new WordPasterManager();
-                this.wdp.Config["PostUrl"] = "http://localhost:1762/upload.aspx";
+                this.wdp.Config["PostUrl"] = "http://localhost:8891/upload.aspx";
                 this.wdp.Load();
                 this.editor = window.UE.getEditor('editor');
                 this.editor.addListener('ready', () => {
