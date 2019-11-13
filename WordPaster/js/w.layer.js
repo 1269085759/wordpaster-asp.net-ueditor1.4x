@@ -3,7 +3,7 @@
 	产品：http://www.ncmem.com/webapp/wordpaster/index.aspx
     控件：http://www.ncmem.com/webapp/wordpaster/pack.aspx
     示例：http://www.ncmem.com/webapp/wordpaster/versions.aspx
-    版本：2.4.1
+    版本：2.4.2
     更新记录：
 		2012-07-04 增加对IE9的支持。
 */
@@ -95,7 +95,8 @@ function WordPasterManager()
     this.imgIco = null;//jquery obj
     this.imgMsg = null;//jquery obj
     this.imgPercent = null;//jquery obj
-    this.ui = { setup: null ,single:null};
+    this.ui = { setup: null, single: null };
+    this.layerPaste = 0;
     this.ffPaster = null;
     this.ieParser = null;
     this.ffPasterName = "ffPaster" + new Date().getTime();
@@ -178,16 +179,17 @@ function WordPasterManager()
     {
         this.app.postMessage = this.app.postMessageEdge;
 	}
-    this.setup_tip = function () {        
-        var dom = this.ui.setup.html("控件加载中，如果未加载成功请先<a name='w-exe'>安装控件</a>");
+    this.setup_tip = function () {
+        var dom = this.ui.setup.find("div").html("控件加载中，如果未加载成功请先<a name='w-exe'>安装控件</a>");
         var lnk = dom.find('a[name="w-exe"]');
         lnk.attr("href", this.Config["ExePath"]);
-        this.layerTip = layer.open({
+        this.layerPaste = layer.open({
             type: 1,
             title: "安装提示",
             closeBtn: 1,
-            area: ['170px', '113px'],
+            area: ['291px', '124px'],
             skin: 'layui-layer-nobg',
+             scrollbar: false,
             content: _this.ui.setup
         });
     };
@@ -196,7 +198,7 @@ function WordPasterManager()
         var dom = this.ui.setup.html("发现新版本，请<a name='w-exe' href='#'>更新</a>");
         var lnk = dom.find('a[name="w-exe"]');
         lnk.attr("href", this.Config["ExePath"]);
-        this.layerTip = layer.open({
+        this.layerPaste = layer.open({
             type: 1,
             title: "更新提示",
             closeBtn: 1,
@@ -246,7 +248,7 @@ function WordPasterManager()
 	    acx += '<img name="ico" id="infIco" alt="进度图标" src="' + this.Config["IcoUploader"] + '" /><span name="msg">图片上传中...</span><span name="percent">10%</span>';
         acx += '</div>';
         //安装提示
-        acx += '<div name="ui-setup" class="panel-paster panel-setup"></div>';
+        acx += '<div name="ui-setup" class="panel-paster panel-setup"><div style="padding:10px;"></div></div>';
 	    //图片批量上传窗口
         acx += '<div name="filesPanel" class="panel-files" style="display: none;"></div>';
 	    //
@@ -375,7 +377,8 @@ function WordPasterManager()
 	this.CloseDialogPaste = function ()
 	{
         layer.close(this.layerPaste);
-        this.dialogOpened=false;
+        this.dialogOpened = false;
+        this.layerPaste = 0;
 	};
 	this.InsertHtml = function (html)
 	{
@@ -400,7 +403,12 @@ function WordPasterManager()
 	{
 	    if (!this.setuped)
         {
-            this.setup_tip(); return;
+            this.setup_tip();
+            if (this.edge) {
+                this.edgeApp.run();
+                setTimeout(function () { _this.edgeApp.connect(); }, 1000);
+            }
+            return;
 	    }
 	    if (!this.chrome45 && !_this.edge)
 	    {
@@ -639,8 +647,9 @@ function WordPasterManager()
 	    _this.working = false;
 	};
 	this.load_complete_edge = function (json)
-	{
+    {
         _this.app.init();
+        this.CloseDialogPaste();
     };
     this.imgs_out_limit = function (json) {
         layer.alert(WordPasterError["13"] + "<br/>文档图片数量：" + json.imgCount + "<br/>限制数量：" + json.imgLimit, { icon: 2 });

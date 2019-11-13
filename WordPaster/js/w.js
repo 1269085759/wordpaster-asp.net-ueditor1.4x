@@ -3,7 +3,7 @@
 	产品：http://www.ncmem.com/webapp/wordpaster/index.aspx
     控件：http://www.ncmem.com/webapp/wordpaster/pack.aspx
     示例：http://www.ncmem.com/webapp/wordpaster/versions.aspx
-    版本：2.4.1
+    版本：2.4.2
     更新记录：
 		2012-07-04 增加对IE9的支持。
 */
@@ -179,17 +179,26 @@ function WordPasterManager()
         this.app.postMessage = this.app.postMessageEdge;
 	}
     this.setup_tip = function () {
-        this.ui.setup.skygqbox();
-        var dom = this.ui.setup.html("控件加载中，如果未加载成功请先<a name='w-exe'>安装控件</a>");
-        var lnk = dom.find('a[name="w-exe"]');
-        lnk.attr("href", this.Config["ExePath"]);
+        this.ui.setup.skygqbox({
+            width: '291px', height: '80px', onclose: function () {
+                _this.ui.setup.hide();
+            }
+        });
+        var dom = this.ui.setup
+            .show()
+            .find("div")
+            .html("控件加载中，如果未加载成功请先<a name='w-exe'>安装控件</a>");
+        dom.find('a[name="w-exe"]')
+            .attr("href", this.Config["ExePath"]);
+        this.dialogOpened = true;
     };
     this.need_update = function ()
     {
         this.ui.setup.skygqbox();
-        var dom = this.ui.setup.html("发现新版本，请<a name='w-exe' href='#'>更新</a>");
+        var dom = this.ui.setup.find("div").html("发现新版本，请<a name='w-exe' href='#'>更新</a>");
         var lnk = dom.find('a[name="w-exe"]');
         lnk.attr("href", this.Config["ExePath"]);
+        this.dialogOpened = true;
     };
 	this.setupTipClose = function ()
 	{
@@ -232,7 +241,7 @@ function WordPasterManager()
 	    acx += '<img name="ico" id="infIco" alt="进度图标" src="' + this.Config["IcoUploader"] + '" /><span name="msg">图片上传中...</span><span name="percent">10%</span>';
         acx += '</div>';
         //安装提示
-        acx += '<div name="ui-setup" class="panel-paster panel-setup"></div>';
+        acx += '<div name="ui-setup" class="panel-paster panel-setup"><div style="padding:10px;"></div></div>';
 	    //图片批量上传窗口
         acx += '<div name="filesPanel" class="panel-files" style="display: none;"></div>';
 	    //
@@ -338,9 +347,11 @@ function WordPasterManager()
         }
 	};
 	this.CloseDialogPaste = function ()
-	{
-		$.skygqbox.hide();
-        this.dialogOpened = false;
+    {
+        if (this.dialogOpened) {
+            $.skygqbox.hide();
+            this.dialogOpened = false;
+        }
 	};
 	this.InsertHtml = function (html)
 	{
@@ -365,7 +376,12 @@ function WordPasterManager()
 	{
 	    if (!this.setuped)
         {
-            this.setup_tip(); return;
+            this.setup_tip();
+            if (this.edge) {
+                this.edgeApp.run();
+                setTimeout(function () { _this.edgeApp.connect(); }, 1000);
+            }
+            return;
 	    }
 	    if (!this.chrome45 && !_this.edge)
 	    {
@@ -607,6 +623,7 @@ function WordPasterManager()
 	this.load_complete_edge = function (json)
 	{
         _this.app.init();
+        this.CloseDialogPaste();
     };
     this.imgs_out_limit = function (json) {
         this.show_msg(WordPasterError["13"] + "<br/>文档图片数量：" + json.imgCount + "<br/>限制数量：" + json.imgLimit);

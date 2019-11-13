@@ -32,7 +32,7 @@
         var html = "<iframe id='wordpaster-uri-fra' width=1 height=1 src='" + protocol + "'></iframe>";
         $("#wordpaster-uri-fra").remove();
         $(document.body).append(html);
-        setTimeout(function () { _this.connect() }, 1000);//启动定时器
+        //setTimeout(function () { _this.connect() }, 1000);//启动定时器
     };
     this.connect = function ()
     {
@@ -63,7 +63,7 @@
                 if (!this.exit) {
                     _this.tryConnect = true;
                     _this.run();
-                    setTimeout(function () { _this.connect() }, 1000);//启动定时器
+                    //setTimeout(function () { _this.connect() }, 1000);//启动定时器
                 }
             };
         };
@@ -71,7 +71,7 @@
         {
             _this.run();
             console.log("连接失败");
-            setTimeout(function () { _this.connect() }, 3000);//启动定时器
+            //setTimeout(function () { _this.connect() }, 3000);//启动定时器
         };
     };
     this.close = function ()
