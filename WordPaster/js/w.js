@@ -329,7 +329,7 @@ function WordPasterManager()
     //打开图片上传对话框
 	this.OpenDialogFile = function ()
 	{
-	    _this.imgUploaderDlg.skygqbox();
+        _this.imgUploaderDlg.skygqbox({width:'452px',height:'445px'});
 	};
 	this.CloseDialogFile = function ()
 	{
@@ -340,7 +340,7 @@ function WordPasterManager()
 	this.OpenDialogPaste = function ()
 	{
         if (!this.dialogOpened) {
-            _this.imgPasterDlg.skygqbox({onclose:function(){
+            _this.imgPasterDlg.skygqbox({width:'500px',height:'107px',onclose:function(){
             	_this.dialogOpened = false;
             }});
             this.dialogOpened = true;
