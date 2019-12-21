@@ -17,13 +17,10 @@
             navigator.msLaunchUri(mgr.Config.edge.protocol + "://" + mgr.Config.edge.port, function ()
             {
                 console.log('应用打开成功');
-                //_this.connect();//
-                //alert("success");
             }, function ()
             {
                 console.log('启动失败');
             });
-            setTimeout(function () { _this.connect() }, 1000);//启动定时器
             _this.runed = true;
         }
     };
@@ -32,7 +29,6 @@
         var html = "<iframe id='wordpaster-uri-fra' width=1 height=1 src='" + protocol + "'></iframe>";
         $("#wordpaster-uri-fra").remove();
         $(document.body).append(html);
-        //setTimeout(function () { _this.connect() }, 1000);//启动定时器
     };
     this.connect = function ()
     {
@@ -46,14 +42,11 @@
             _this.socket = con;
             _this.tryConnect = false;
             console.log("服务连接成功");
-            // 发送一个初始化消息
-            //socket.send('I am the client and I\'m listening!');
 
             // 监听消息
             con.onmessage = function (event)
             {
                 mgr.recvMessage(event.data);
-                //console.log('Client received a message', event);
             };
 
             // 监听Socket的关闭
@@ -63,7 +56,6 @@
                 if (!this.exit) {
                     _this.tryConnect = true;
                     _this.run();
-                    //setTimeout(function () { _this.connect() }, 1000);//启动定时器
                 }
             };
         };
@@ -71,7 +63,6 @@
         {
             _this.run();
             console.log("连接失败");
-            //setTimeout(function () { _this.connect() }, 3000);//启动定时器
         };
     };
     this.close = function ()

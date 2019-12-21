@@ -45,7 +45,8 @@ var WordPasterConfig = {
     , "FileCountLimit"		: 300//图片数量限制
     , "AppPath"			    : ""
 	, "Cookie"			    : ""
-    , "Servers"             :[{"url":"www.ncmem.com"},{"url":"www.xproerui.com"}]//内部服务器地址(不下载此地址中的图片)
+    , "Servers"             : [{"url":"www.ncmem.com"},{"url":"www.xproerui.com"}]//内部服务器地址(不下载此地址中的图片)
+    , "WebImg"              : {urlEncode:true/*下载外部图片地址是URL是否自动编码，默认情况下自动编码，部分网站URL没有进行编码*/}
 	, "IcoError"            : "http://www.ncmem.com/products/word-imagepaster/ckeditor353/WordPaster/error.png"
     , "IcoUploader"         : "http://www.ncmem.com/products/word-imagepaster/ckeditor353/WordPaster/upload.gif"
 	, "PostUrl"			    : "http://www.ncmem.com/products/word-imagepaster/fckeditor2461/asp.net/upload.aspx"
@@ -117,7 +118,8 @@ function WordPasterManager()
 	this.dialogOpened=false;
 	this.fileMap = new Object();//文件映射表。
 	this.postType = WordPasteImgType.word;//默认是word
-	this.working = false;//正在上传中
+    this.working = false;//正在上传中
+    this.pluginInited = false;
     this.edgeApp = new WebServer(this);
     this.app = WordPasterApp;
     this.app.ins = this;
@@ -177,7 +179,23 @@ function WordPasterManager()
 	else if (this.edge)
     {
         this.app.postMessage = this.app.postMessageEdge;
-	}
+    }
+
+    this.pluginLoad = function () {
+        if (!this.pluginInited) {
+            if (this.edge) {
+                this.edgeApp.connect();
+            }
+        }
+    };
+    this.pluginCheck = function () {
+        if (!this.pluginInited) {
+            this.setup_tip();
+            this.pluginLoad();
+            return false;
+        }
+        return true;
+    };
     this.setup_tip = function () {
         this.ui.setup.skygqbox({
             width: '291px', height: '80px', onclose: function () {
@@ -340,7 +358,10 @@ function WordPasterManager()
 	this.OpenDialogPaste = function ()
 	{
         if (!this.dialogOpened) {
-            _this.imgPasterDlg.skygqbox({onclose:function(){
+            _this.imgPasterDlg.skygqbox({
+                width: '324px',
+                height:"100px",
+                onclose: function () {
             	_this.dialogOpened = false;
             }});
             this.dialogOpened = true;
@@ -374,15 +395,7 @@ function WordPasterManager()
     //手动粘贴
 	this.PasteManual = function ()
 	{
-	    if (!this.setuped)
-        {
-            this.setup_tip();
-            if (this.edge) {
-                this.edgeApp.run();
-                setTimeout(function () { _this.edgeApp.connect(); }, 1000);
-            }
-            return;
-	    }
+	    if( !this.pluginCheck() ) return;
 	    if (!this.chrome45 && !_this.edge)
 	    {
 
@@ -401,6 +414,7 @@ function WordPasterManager()
     //上传网络图片
 	this.UploadNetImg = function ()
 	{
+		if( !this.pluginCheck() ) return;
 	    var data = _this.Editor.getContent();
         this.app.pasteAuto(data);
 	};
@@ -586,7 +600,12 @@ function WordPasterManager()
 	this.WordParser_PostError = function (json)
 	{
 		this.OpenDialogPaste();
-		this.imgMsg.html(WordPasterError[json.value]+"<br/>PostUrl:"+this.Config["PostUrl"]+"<br/>License:"+this.Config["License"]+"<br/>当前url:"+window.location.href);
+        this.imgMsg.html(
+            WordPasterError[json.value] + "<br/>" +
+            "PostUrl:" + this.Config["PostUrl"] + "<br/>" +
+            "License:" + this.Config["License"] + "<br/>" +
+            "License2:" + this.Config["License2"] + "<br/>" +
+            "当前url:" + window.location.href);
 	    this.imgIco.attr("src",this.Config["IcoError"]);
 	    this.imgPercent.text("");
 	};
@@ -622,6 +641,7 @@ function WordPasterManager()
 	};
 	this.load_complete_edge = function (json)
 	{
+		this.pluginInited = true;
         _this.app.init();
         this.CloseDialogPaste();
     };
@@ -652,6 +672,7 @@ function WordPasterManager()
     {
         if (this.websocketInited) return;
         this.websocketInited = true;
+		this.pluginInited = true;
 
         var needUpdate = true;
         if (typeof (json.version) != "undefined")
@@ -662,7 +683,6 @@ function WordPasterManager()
             }
         }
         if (needUpdate) this.need_update();
-        //else { $.skygqbox.hide(); }
     };
     this.recvMessage = function (msg)
 	{
