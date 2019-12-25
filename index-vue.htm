@@ -7,13 +7,13 @@
     <!--<script type="text/javascript" src="ueditor.all.js" charset="utf-8"></script>-->
     <script type="text/javascript" src="ueditor.all.min.js" charset="utf-8"></script>
     <link type="text/css" rel="Stylesheet" href="WordPaster/css/WordPaster.css" />
-    <link type="text/css" rel="Stylesheet" href="WordPaster/js/skygqbox.css" />
-    <script type="text/javascript" src="WordPaster/js/json2.min.js" charset="utf-8"></script>
-    <script type="text/javascript" src="WordPaster/js/jquery-1.4.min.js" charset="utf-8"></script>
+    <ljavascript" src="WordPaster/js/jquery-1.4.min.js" charset="utf-8"></script>
     <script type="text/javascript" src="WordPaster/js/skygqbox.js" charset="utf-8"></script>
     <script type="text/javascript" src="WordPaster/js/w.edge.js" charset="utf-8"></script>
     <script type="text/javascript" src="WordPaster/js/w.app.js" charset="utf-8"></script>
-    <script type="text/javascript" src="WordPaster/js/w.file.js" charset="utf-8"></script>
+    <script type="text/javascript" src="WordPaster/js/w.file.js" charset="utf-8"></ink type="text/css" rel="Stylesheet" href="WordPaster/js/skygqbox.css" />
+    <script type="text/javascript" src="WordPaster/js/json2.min.js" charset="utf-8"></script>
+    <script type="text/script>
     <script type="text/javascript" src="WordPaster/js/w.js" charset="utf-8"></script>
     <script type="text/javascript" src="vue.min.js" charset="utf-8"></script>
 </head>
@@ -23,7 +23,7 @@
         </div>
     <script>
         Vue.component('ueditor', {
-            data() {
+            data: function(){
                 return {
                     editor: null, wdp: null
                 }
@@ -32,7 +32,7 @@
                 value: '',
                 config: {}
             },
-            mounted() {
+            mounted: function(){
                 this.wdp = new WordPasterManager();
                 this.wdp.Config["PostUrl"] = "http://localhost:8891/upload.aspx";
                 this.wdp.Load();
@@ -46,11 +46,11 @@
                 });
             },
             methods: {
-                getUEContent() {
+                getUEContent: function(){
                     return this.editor.getContent()
                 }
             },
-            destroyed() {
+            destroyed: function(){
                 this.editor.destroy()
             },
             template: '<div><textarea id="editor" name="editor"/></div>'
