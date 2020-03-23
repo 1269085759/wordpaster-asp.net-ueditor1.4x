@@ -320,7 +320,7 @@ function WordPasterManager()
     //在文档加载完毕后调用
 	this.init = function ()
 	{
-	    $(function ()
+        setTimeout(function ()
         {
             if (!_this.edge)
             {
@@ -332,7 +332,7 @@ function WordPasterManager()
                 _this.edgeApp.connect();
             }
             else { _this.app.init(); }
-	    });
+	    }, 500);
 	};
 
     //打开图片上传对话框
