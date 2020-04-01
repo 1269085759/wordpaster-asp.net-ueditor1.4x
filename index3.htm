@@ -1,11 +1,13 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="index.aspx.cs" Inherits="UEditor.index" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<title>UEditor 1.4.3.3示例</title>
+	<title>Latex公式插件示例</title>
 	<script type="text/javascript" src="ueditor.config.js" charset="utf-8"></script>
     <script type="text/javascript" src="ueditor.all.min.js" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8" src="kityformula-plugin/addKityFormulaDialog.js"></script>
+    <script type="text/javascript" charset="utf-8" src="kityformula-plugin/getKfContent.js"></script>
+    <script type="text/javascript" charset="utf-8" src="kityformula-plugin/defaultFilterFix.js"></script>
 	<link type="text/css" rel="Stylesheet" href="WordPaster/css/WordPaster.css"/>
     <link type="text/css" rel="Stylesheet" href="WordPaster/js/skygqbox.css" />
     <script type="text/javascript" src="WordPaster/js/json2.min.js" charset="utf-8"></script>
@@ -21,8 +23,7 @@
     <p><a target="_blank" href="index-layer.htm">layer弹窗示例（支持ie8+）</a></p>
     <p><a target="_blank" href="index-vue.htm">vue示例</a></p>
     <p><a target="_blank" href="index2.htm">多编辑器示例</a></p>
-	<p><a target="_blank" href="index3.htm">Latex公式插件示例</a></p>
-	<p><a target="_blank" href="index-scp.htm">截屏示例</a></p>
+    <p><a target="_blank" href="index-scp.htm">截屏示例</a></p>
 	<textarea name="后台取值的key" id="myEditor">这里写你的初始化内容</textarea>
 	<script type="text/javascript">
 	    var pasterMgr = new WordPasterManager();
@@ -30,7 +31,12 @@
 	    pasterMgr.Config["Cookie"] = 'ASP.NET_SessionId=<%=Session.SessionID%>';
 	    pasterMgr.Load();//加载控件
 
-	    var ue = UE.getEditor('myEditor');
+	    var ue = UE.getEditor('myEditor',{
+            toolbars: [[
+                'fullscreen', 'source', '|',
+                'bold', 'italic', 'underline', '|', 'fontsize', '|', 'kityformula', 'preview','wordpaster'
+            ]]
+        });
 
 	    ue.ready(function ()
 	    {
@@ -51,4 +57,3 @@
 	</script>
 </body>
 </html>
-
