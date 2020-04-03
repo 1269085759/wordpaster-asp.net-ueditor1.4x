@@ -3,7 +3,7 @@
 	产品：http://www.ncmem.com/webapp/wordpaster/index.aspx
     控件：http://www.ncmem.com/webapp/wordpaster/pack.aspx
     示例：http://www.ncmem.com/webapp/wordpaster/versions.aspx
-    版本：2.4.3
+    版本：2.4.4
     更新记录：
 		2012-07-04 增加对IE9的支持。
 */
@@ -74,6 +74,7 @@ UE.registerUI('netpaster', function(editor, uiName) {
 	});
     return btn;
 });
+
 //系统错误
 var WordPasterError = {
 	  "0": "连接服务器错误"
@@ -692,7 +693,13 @@ function WordPasterManager()
 	    else if (_this.postType == WordPasteImgType.word)
 	    {
 	        _this.InsertHtml(json.word);//
-	    }
+		}//本地图片
+		else if(this.postType==WordPasteImgType.local)
+		{
+			$.each(this.fileMap,function(n,v){
+				v.addToEditor();
+			});
+		}
 	    this.CloseDialogFile();
 	    _this.working = false;
 	};

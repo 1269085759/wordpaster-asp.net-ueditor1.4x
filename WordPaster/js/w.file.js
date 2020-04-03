@@ -47,18 +47,20 @@ function FileUploader(fileID,filePath,mgr,width,height)
 	this.FileID = fileID;
 	this.idLoc = fileID;//add(2015-12-10)
 	this.ImageTag = ""; //图片标记，在图片上传完后需要替换此标记
+	this.url = "";
 
 	this.postComplete = function (json)
 	{
 	    this.pButton.text("");
 	    this.pProcess.css("width", "100%");
 	    this.pPercent.text("100%");
-	    this.pMsg.text("上传完成");
+		this.pMsg.text("上传完成");
+		this.url = json.pathSvr;
 
 	    //从上传列表中清除
 	    this.Remove();
 	    //更新编辑器中的图片标签
-	    this.FilePostComplete(json.pathSvr);
+	    //this.FilePostComplete(json.pathSvr);
 	};
 
 	this.postError = function (json)
@@ -101,6 +103,10 @@ function FileUploader(fileID,filePath,mgr,width,height)
 		this.ATL.Stop();
 		this.State = FileUploaderState.Stop;
 		this.pButton.text("重试");
+	};
+	this.addToEditor = function(){
+		var img = '<img src="' + this.url + '"/>';
+		_this.InsertHtml(img);
 	};
 
 	//本地图片文件上传完毕
