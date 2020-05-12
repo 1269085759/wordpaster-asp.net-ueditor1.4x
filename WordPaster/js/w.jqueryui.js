@@ -1,80 +1,14 @@
 ﻿/*
-	版权所有 2009-2019 荆门泽优软件有限公司 保留所有版权。
+	版权所有 2009-2020 荆门泽优软件有限公司 保留所有版权。
 	产品：http://www.ncmem.com/webapp/wordpaster/index.aspx
     控件：http://www.ncmem.com/webapp/wordpaster/pack.aspx
     示例：http://www.ncmem.com/webapp/wordpaster/versions.aspx
-    版本：2.4.3
+    版本：2.4.5
     更新记录：
-		2012-07-04 增加对IE9的支持。
+		2020-05-12 优化UE插件按钮注册方式。
+        2012-07-04 增加对IE9的支持。
 */
 
-UE.registerUI('wordpaster', function(editor, uiName) {
-    editor.registerCommand(uiName, {
-        execCommand: function() {
-			editor.focus();
-            pasterMgr.PasteManual();
-        }
-    });
-    var iconUrl = editor.options.UEDITOR_HOME_URL + 'WordPaster/css/paster.png';
-    
-    var btn = new UE.ui.Button({
-        name: "Word一键粘贴",
-        //提示
-        title: 'Word一键粘贴',
-        cssRules: 'background: url("' + iconUrl + '") no-repeat 2px 2px !important',
-        onclick: function() {
-			editor.focus();
-            pasterMgr.PasteManual();
-        }
-    });
-    editor.addListener('selectionchange', function() {
-        var state = editor.queryCommandState(uiName);
-        if (state == -1) {
-            btn.setDisabled(true);
-            btn.setChecked(false);
-        } else {
-            btn.setDisabled(false);
-            btn.setChecked(state);
-        }
-	});
-	editor.addListener('ready',function(){
-		pasterMgr.SetEditor(editor);
-	});
-    return btn;
-});
-UE.registerUI('netpaster', function(editor, uiName) {
-    editor.registerCommand(uiName, {
-        execCommand: function() {
-			editor.focus();
-            pasterMgr.UploadNetImg();
-        }
-    });
-    var iconUrl = editor.options.UEDITOR_HOME_URL + 'WordPaster/css/net.png';
-    
-    var btn = new UE.ui.Button({
-        name: "自动上传网络图片",
-        title: '自动上传网络图片',
-        cssRules: 'background: url("' + iconUrl + '") no-repeat 2px 2px !important',
-        onclick: function() {
-			editor.focus();
-            pasterMgr.UploadNetImg();
-        }
-    });
-    editor.addListener('selectionchange', function() {
-        var state = editor.queryCommandState(uiName);
-        if (state == -1) {
-            btn.setDisabled(true);
-            btn.setChecked(false);
-        } else {
-            btn.setDisabled(false);
-            btn.setChecked(state);
-        }
-    });
-	editor.addListener('ready',function(){
-		pasterMgr.SetEditor(editor);
-	});
-    return btn;
-});
 //系统错误
 var WordPasterError = {
 	  "0": "连接服务器错误"
@@ -154,6 +88,75 @@ var WordPasteImgType = {local:0/*本地图片*/,network:1/*网络图片*/,word:2
 function WordPasterManager()
 {
     var _this = this;
+
+    UE.registerUI('wordpaster', function (editor, uiName) {
+        editor.registerCommand(uiName, {
+            execCommand: function () {
+                editor.focus();
+                _this.PasteManual();
+            }
+        });
+        var iconUrl = editor.options.UEDITOR_HOME_URL + 'WordPaster/css/paster.png';
+
+        var btn = new UE.ui.Button({
+            name: "Word一键粘贴",
+            //提示
+            title: 'Word一键粘贴',
+            cssRules: 'background: url("' + iconUrl + '") no-repeat 2px 2px !important',
+            onclick: function () {
+                editor.focus();
+                _this.PasteManual();
+            }
+        });
+        editor.addListener('selectionchange', function () {
+            var state = editor.queryCommandState(uiName);
+            if (state == -1) {
+                btn.setDisabled(true);
+                btn.setChecked(false);
+            } else {
+                btn.setDisabled(false);
+                btn.setChecked(state);
+            }
+        });
+        editor.addListener('ready', function () {
+            _this.SetEditor(editor);
+        });
+        return btn;
+    });
+    UE.registerUI('netpaster', function (editor, uiName) {
+        editor.registerCommand(uiName, {
+            execCommand: function () {
+                editor.focus();
+                _this.UploadNetImg();
+            }
+        });
+        var iconUrl = editor.options.UEDITOR_HOME_URL + 'WordPaster/css/net.png';
+
+        var btn = new UE.ui.Button({
+            name: "自动上传网络图片",
+            title: '自动上传网络图片',
+            cssRules: 'background: url("' + iconUrl + '") no-repeat 2px 2px !important',
+            onclick: function () {
+                editor.focus();
+                _this.UploadNetImg();
+            }
+        });
+        editor.addListener('selectionchange', function () {
+            var state = editor.queryCommandState(uiName);
+            if (state == -1) {
+                btn.setDisabled(true);
+                btn.setChecked(false);
+            } else {
+                btn.setDisabled(false);
+                btn.setChecked(state);
+            }
+        });
+        editor.addListener('ready', function () {
+            _this.SetEditor(editor);
+        });
+        return btn;
+    });
+
     this.Editor = null;
     this.Fields = {}; //符加信息
     this.UploadDialogCreated = false;
