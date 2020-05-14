@@ -67,7 +67,8 @@ var WordPasterConfig = {
     //Edge
     , edge: { protocol: "wordpaster", port: 9200, visible: false }
     , "ExePath": "http://www.ncmem.com/download/WordPaster2/WordPaster.exe"
-    , "mac": { path: "http://res2.ncmem.com/download/WordPaster/fast/2.0.17/WordPaster.pkg" }
+    , "mac": { path: "http://res2.ncmem.com/download/WordPaster/mac/1.0.9/WordPaster.pkg" }
+    , "linux": { path: "http://res2.ncmem.com/download/WordPaster/fast/2.0.24/wordpaster_1.0.0_i386.deb" }
 };
 function debugMsg(m) { $("#msg").append(m);}
 var WordPasterActiveX = {
@@ -222,6 +223,12 @@ function WordPasterManager()
         this.app.postMessage = this.app.postMessageEdge;
         this.edgeApp.run = this.edgeApp.runChr;
         this.Config.ExePath = this.Config.mac.path;
+    }
+    else if (window.navigator.platform == "Linux x86_64") {
+        this.edge = true;
+        this.app.postMessage = this.app.postMessageEdge;
+        this.edgeApp.run = this.edgeApp.runChr;
+        this.Config.ExePath = this.Config.linux.path;
     }//Firefox
 	else if (this.firefox)
     {
