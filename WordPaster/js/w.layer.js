@@ -43,6 +43,7 @@ var WordPasterConfig = {
 	, "ThumbHeight"		    : "0"	//缩略图高度。0表示不使用缩略图
 	, "FileFieldName"		: "file"//自定义文件名称名称
     , "ImageMatch"		    : ""//服务器返回数据匹配模式，正则表达式，提取括号中的地址
+    , "ImageUrl"		    : ""//自定义图片地址，格式"{url}"，{url}为固定变量，在此变量前后拼接图片路径，此变量的值为posturl返回的图片地址
     , "FileCountLimit"		: 300//图片数量限制
     , "AppPath"			    : ""
 	, "Cookie"			    : ""
