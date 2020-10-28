@@ -107,6 +107,7 @@ function WordPasterManager()
             cssRules: 'background: url("' + iconUrl + '") no-repeat 2px 2px !important',
             onclick: function () {
                 editor.focus();
+                _this.SetEditor(editor);
                 _this.PasteManual();
             }
         });
@@ -121,6 +122,9 @@ function WordPasterManager()
             }
         });
         editor.addListener('ready', function () {
+            _this.SetEditor(editor);
+        });
+        editor.addListener("firstBeforeExecCommand", function () {
             _this.SetEditor(editor);
         });
         return btn;
@@ -140,6 +144,7 @@ function WordPasterManager()
             cssRules: 'background: url("' + iconUrl + '") no-repeat 2px 2px !important',
             onclick: function () {
                 editor.focus();
+                _this.SetEditor(editor);
                 _this.UploadNetImg();
             }
         });
@@ -154,6 +159,9 @@ function WordPasterManager()
             }
         });
         editor.addListener('ready', function () {
+            _this.SetEditor(editor);
+        });
+        editor.addListener("firstBeforeExecCommand", function () {
             _this.SetEditor(editor);
         });
         return btn;

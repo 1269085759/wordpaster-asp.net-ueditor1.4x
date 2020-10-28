@@ -20,8 +20,7 @@
     <p><a target="_blank" href="index-jqueryui.htm">jquery ui弹窗示例（支持ie6+）</a></p>
     <p><a target="_blank" href="index-layer.htm">layer弹窗示例（支持ie8+）</a></p>
     <p><a target="_blank" href="index-vue.htm">vue示例</a></p>
-    <p><a target="_blank" href="index2.htm">多编辑器示例</a></p>
-	<p><a target="_blank" href="index3.htm">Latex公式插件示例</a></p>
+	<p><a target="_blank" href="index2.htm">Latex公式插件示例</a></p>
 	<p><a target="_blank" href="index-scp.htm">截屏示例</a></p>
 	<textarea name="后台取值的key" id="myEditor">这里写你的初始化内容</textarea>
 	<script type="text/javascript">
