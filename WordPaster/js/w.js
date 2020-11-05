@@ -712,12 +712,6 @@ function WordPasterManager()
 	    else if (_this.postType == WordPasteImgType.word)
 	    {
 	        _this.InsertHtml(json.word);//
-		}//本地图片
-		else if(this.postType==WordPasteImgType.local)
-		{
-			$.each(this.fileMap,function(n,v){
-				v.addToEditor();
-			});
 		}
 	    this.CloseDialogFile();
 	    _this.working = false;

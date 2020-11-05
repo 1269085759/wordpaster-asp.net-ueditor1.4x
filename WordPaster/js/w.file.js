@@ -60,7 +60,7 @@ function FileUploader(fileID,filePath,mgr,width,height)
 	    //从上传列表中清除
 	    this.Remove();
 	    //更新编辑器中的图片标签
-	    //this.FilePostComplete(json.pathSvr);
+	    this.FilePostComplete(json.pathSvr);
 	};
 
 	this.postError = function (json)
