@@ -62,6 +62,10 @@
         var param = { name: "paste"};
         this.postMessage(param);
     }
+    , pastePPT: function () {
+        var param = { name: "pastePPT"};
+        this.postMessage(param);
+    }
     , pasteAuto: function (data) {
         var param = { name: "pasteAuto",html:data};
         this.postMessage(param);

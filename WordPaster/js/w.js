@@ -166,6 +166,43 @@ function WordPasterManager()
         });
         return btn;
     });
+    UE.registerUI('ppt', function (editor, uiName) {
+        editor.registerCommand(uiName, {
+            execCommand: function () {
+                editor.focus();
+                _this.PastePPT();
+            }
+        });
+        var iconUrl = editor.options.UEDITOR_HOME_URL + 'WordPaster/css/ppt.png';
+
+        var btn = new UE.ui.Button({
+            name: "PowerPoint一键粘贴",
+            title: 'PowerPoint一键粘贴',
+            cssRules: 'background: url("' + iconUrl + '") no-repeat 2px 2px !important',
+            onclick: function () {
+                editor.focus();
+                _this.SetEditor(editor);
+                _this.PastePPT();
+            }
+        });
+        editor.addListener('selectionchange', function () {
+            var state = editor.queryCommandState(uiName);
+            if (state == -1) {
+                btn.setDisabled(true);
+                btn.setChecked(false);
+            } else {
+                btn.setDisabled(false);
+                btn.setChecked(state);
+            }
+        });
+        editor.addListener('ready', function () {
+            _this.SetEditor(editor);
+        });
+        editor.addListener("firstBeforeExecCommand", function () {
+            _this.SetEditor(editor);
+        });
+        return btn;
+    });
 
     this.Editor = null;
     this.Fields = {}; //符加信息
@@ -486,6 +523,25 @@ function WordPasterManager()
 	    {
             this.app.paste();
 	    }
+	};
+
+	//powerpoint
+	this.PastePPT = function ()
+	{
+		if( !this.pluginCheck() ) return;
+		if (!this.chrome45 && !_this.edge)
+		{
+
+			this.app.pastePPT();
+		}
+		else if (this.chrome45)
+		{
+			this.app.pastePPT();
+		}
+		else if(this.edge)
+		{
+			this.app.pastePPT();
+		}
 	};
 
     //上传网络图片

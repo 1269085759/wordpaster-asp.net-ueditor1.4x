@@ -277,8 +277,9 @@
     <Content Include="ueditor.config.js" />
     <Content Include="ueditor.parse.js" />
     <Content Include="upload.aspx" />
-    <Content Include="WordPaster\css\ico.png" />
+    <Content Include="WordPaster\css\net.png" />
     <Content Include="WordPaster\css\paster.png" />
+    <Content Include="WordPaster\css\ppt.png" />
     <Content Include="WordPaster\css\WordPaster.css" />
     <Content Include="WordPaster\error.png" />
     <Content Include="WordPaster\js\jquery-1.4.min.js" />
