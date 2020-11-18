@@ -410,41 +410,49 @@ function WordPasterManager()
 
     //加载控件及HTML元素
 	this.Load = function ()
-	{
-        var dom             = $(document.body).append(this.GetHtml());
-        this.ffPaster       = dom.find('embed[name="' + this.ffPasterName + '"]').get(0);
-        this.ieParser       = dom.find('object[name="' + this.iePasterName + '"]').get(0);
-	    this.line           = dom.find('div[name="line"]');
-	    this.fileItem       = dom.find('div[name="fileItem"]');
-	    this.filesPanel     = dom.find('div[name="filesPanel"]');
-	    this.imgUploaderDlg = dom.find('div[name="filesPanel"]');
-	    this.imgPasterDlg   = dom.find('div[name="imgPasterDlg"]');
-	    this.imgIco         = this.imgPasterDlg.find('img[name="ico"]');
-	    this.imgMsg         = this.imgPasterDlg.find('span[name="msg"]');
-	    this.imgPercent     = this.imgPasterDlg.find('span[name="percent"]');
-        this.ui.single      = dom.find('div[name="imgPasterDlg"]');
-        this.ui.setup       = dom.find('div[name="ui-setup"]');
+    {
+        if (!WordPaster.getInstance().inited)
+        {
+            var dom = $(document.body).append(this.GetHtml());
+            this.ffPaster = dom.find('embed[name="' + this.ffPasterName + '"]').get(0);
+            this.ieParser = dom.find('object[name="' + this.iePasterName + '"]').get(0);
+            this.line = dom.find('div[name="line"]');
+            this.fileItem = dom.find('div[name="fileItem"]');
+            this.filesPanel = dom.find('div[name="filesPanel"]');
+            this.imgUploaderDlg = dom.find('div[name="filesPanel"]');
+            this.imgPasterDlg = dom.find('div[name="imgPasterDlg"]');
+            this.imgIco = this.imgPasterDlg.find('img[name="ico"]');
+            this.imgMsg = this.imgPasterDlg.find('span[name="msg"]');
+            this.imgPercent = this.imgPasterDlg.find('span[name="percent"]');
+            this.ui.single = dom.find('div[name="imgPasterDlg"]');
+            this.ui.setup = dom.find('div[name="ui-setup"]');
 
-	    this.init();
+            this.init();
+        }
+        WordPaster.getInstance().inited = true;
 	};
 
 	this.LoadTo = function (oid)
-	{
-	    var dom             = $("#" + oid).append(this.GetHtml());
-        this.ffPaster       = dom.find('embed[name="' + this.ffPasterName + '"]').get(0);
-        this.ieParser       = dom.find('object[name="' + this.iePasterName + '"]').get(0);
-	    this.line           = dom.find('div[name="line"]');
-	    this.fileItem       = dom.find('div[name="fileItem"]');
-	    this.filesPanel     = dom.find('div[name="filesPanel"]');
-	    this.imgUploaderDlg = dom.find('div[name="filesPanel"]');
-        this.imgPasterDlg   = dom.find('div[name="imgPasterDlg"]');
-        this.ui.single      = dom.find('div[name="imgPasterDlg"]');
-	    this.imgIco         = this.imgPasterDlg.find('img[name="ico"]');
-	    this.imgMsg         = this.imgPasterDlg.find('span[name="msg"]');
-	    this.imgPercent     = this.imgPasterDlg.find('span[name="percent"]');
-        this.ui.setup       = dom.find('div[name="ui-setup"]');
+    {
+        if (WordPaster.getInstance().inited)
+        {
+            var dom = $("#" + oid).append(this.GetHtml());
+            this.ffPaster = dom.find('embed[name="' + this.ffPasterName + '"]').get(0);
+            this.ieParser = dom.find('object[name="' + this.iePasterName + '"]').get(0);
+            this.line = dom.find('div[name="line"]');
+            this.fileItem = dom.find('div[name="fileItem"]');
+            this.filesPanel = dom.find('div[name="filesPanel"]');
+            this.imgUploaderDlg = dom.find('div[name="filesPanel"]');
+            this.imgPasterDlg = dom.find('div[name="imgPasterDlg"]');
+            this.ui.single = dom.find('div[name="imgPasterDlg"]');
+            this.imgIco = this.imgPasterDlg.find('img[name="ico"]');
+            this.imgMsg = this.imgPasterDlg.find('span[name="msg"]');
+            this.imgPercent = this.imgPasterDlg.find('span[name="percent"]');
+            this.ui.setup = dom.find('div[name="ui-setup"]');
 
-	    this.init();
+            this.init();
+        }
+        WordPaster.getInstance().inited = true;
 	};
 
     //在文档加载完毕后调用
@@ -862,4 +870,16 @@ function WordPasterManager()
         else if (json.name == "imgs_out_limit") _this.imgs_out_limit(json);
         else if (json.name == "url_unauth") _this.url_unauth(json);
 	};
+}
+
+var WordPaster = {
+    instance: null,
+    inited:false,
+    getInstance: function (cfg) {
+        if (this.instance == null) {
+            this.instance = new WordPasterManager();
+            $.extend(this.instance.Config,cfg);
+        }
+        return this.instance;
+    }
 }

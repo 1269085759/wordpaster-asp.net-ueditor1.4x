@@ -24,9 +24,10 @@
 	<textarea name="后台取值的key" id="myEditor">这里写你的初始化内容</textarea>
     <div id="scpPanel"></div>
 	<script type="text/javascript">
-        var pasterMgr = new WordPasterManager();
-        pasterMgr.Config["PostUrl"] = "http://localhost:8891/upload.aspx";
-    	pasterMgr.Load();//加载控件
+        var pasterMgr = WordPaster.getInstance({
+            PostUrl: "http://localhost:8891/upload.aspx"
+        });
+        pasterMgr.Load();//加载控件
 
         var editor = null;
     	var scpMgr = new CaptureManager();

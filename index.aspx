@@ -24,10 +24,11 @@
 	<p><a target="_blank" href="index-scp.htm">截屏示例</a></p>
 	<textarea name="后台取值的key" id="myEditor">这里写你的初始化内容</textarea>
 	<script type="text/javascript">
-	    var pasterMgr = new WordPasterManager();
-		pasterMgr.Config["PostUrl"] = "http://localhost:8891/upload.aspx";
-	    pasterMgr.Config["Cookie"] = 'ASP.NET_SessionId=<%=Session.SessionID%>';
-	    pasterMgr.Load();//加载控件
+        var pasterMgr = WordPaster.getInstance({
+            PostUrl: "http://localhost:8891/upload.aspx",
+            Cookie: 'ASP.NET_SessionId=<%=Session.SessionID%>'
+        });
+        pasterMgr.Load();//加载控件
 
 	    var ue = UE.getEditor('myEditor');
 

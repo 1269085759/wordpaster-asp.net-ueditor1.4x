@@ -32,9 +32,11 @@
                 config: {}
             },
             mounted: function(){
-                this.wdp = new WordPasterManager();
-                this.wdp.Config["PostUrl"] = "http://localhost:8891/upload.aspx";
-                this.wdp.Load();
+                this.wdp = WordPaster.getInstance({
+                    PostUrl: "http://localhost:8891/upload.aspx"
+                });
+                this.wdp.Load();//加载控件
+
                 this.editor = window.UE.getEditor('editor');
                 this.editor.addListener('ready', () => {
                     this.wdp.SetEditor(this.editor);
