@@ -54,22 +54,22 @@ var WordPasterConfig = {
 	, "PostUrl"			    : "http://www.ncmem.com/products/word-imagepaster/fckeditor2461/asp.net/upload.aspx"
     //x86
 	, "ClsidParser"		    : "2404399F-F06B-477F-B407-B8A5385D2C5E"
-	, "CabPath"			    : "http://res2.ncmem.com/download/WordPaster/fast/2.0.27/WordPaster.cab"
+	, "CabPath"			    : "http://res2.ncmem.com/download/WordPaster/fast/2.0.29/WordPaster.cab"
 	//x64
 	, "ClsidParser64"		: "7C3DBFA4-DDE6-438A-BEEA-74920D90764B"
-	, "CabPath64"			: "http://res2.ncmem.com/download/WordPaster/fast/2.0.27/WordPaster64.cab"
+	, "CabPath64"			: "http://res2.ncmem.com/download/WordPaster/fast/2.0.29/WordPaster64.cab"
 	//Firefox
 	, "XpiType"	            : "application/npWordPaster2"
-	, "XpiPath"		        : "http://res2.ncmem.com/download/WordPaster/fast/2.0.27/WordPaster.xpi"
+	, "XpiPath"		        : "http://res2.ncmem.com/download/WordPaster/fast/2.0.29/WordPaster.xpi"
 	//Chrome
 	, "CrxName"		        : "npWordPaster2"
 	, "CrxType"	            : "application/npWordPaster2"
-	, "CrxPath"		        : "http://res2.ncmem.com/download/WordPaster/fast/2.0.27/WordPaster.crx"
+	, "CrxPath"		        : "http://res2.ncmem.com/download/WordPaster/fast/2.0.29/WordPaster.crx"
     //Edge
     , edge: { protocol: "wordpaster", port: 9200, visible: false }
-    , "ExePath": "http://res2.ncmem.com/download/WordPaster/fast/2.0.27/WordPaster.exe"
-    , "mac": { path: "http://res2.ncmem.com/download/WordPaster/mac/1.0.15/WordPaster.pkg" }
-    , "linux": { path: "https://ncmem2.oss-cn-shanghai.aliyuncs.com/download/WordPaster/linux/1.0.4/wordpaster.deb" }
+    , "ExePath": "http://res2.ncmem.com/download/WordPaster/fast/2.0.29/WordPaster.exe"
+    , "mac": { path: "http://res2.ncmem.com/download/WordPaster/mac/1.0.17/WordPaster.pkg" }
+    , "linux": { path: "https://ncmem2.oss-cn-shanghai.aliyuncs.com/download/WordPaster/linux/1.0.5/wordpaster.deb" }
 };
 function debugMsg(m) { $("#msg").append(m);}
 var WordPasterActiveX = {
