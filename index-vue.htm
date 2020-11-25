@@ -24,7 +24,7 @@
         Vue.component('ueditor', {
             data: function(){
                 return {
-                    editor: null, wdp: null
+                    editor: null
                 }
             },
             props: {
@@ -32,15 +32,12 @@
                 config: {}
             },
             mounted: function(){
-                this.wdp = WordPaster.getInstance({
+                WordPaster.getInstance({
                     PostUrl: "http://localhost:8891/upload.aspx"
-                });
-                this.wdp.Load();//加载控件
+                }).Load();//加载控件
 
                 this.editor = window.UE.getEditor('editor');
-                this.editor.addListener('ready', () => {
-                    this.wdp.SetEditor(this.editor);
-                });
+                
                 //WordPaster快捷键 Ctrl + V
                 this.editor.addshortcutkey({
                     "wordpaster": "ctrl+86"
@@ -59,12 +56,8 @@
 
         var ue = new Vue({
             el: '#ue',
-            data: {
-            }
-            , mounted: function () {
-                //注册事件
-                window.pasterMgr = this.$refs.ue.wdp;
-            }
+            data: {},
+            mounted: function () {}
         });
 
     </script>

@@ -24,11 +24,10 @@
 	<p><a target="_blank" href="index-scp.htm">截屏示例</a></p>
 	<textarea name="后台取值的key" id="myEditor">这里写你的初始化内容</textarea>
 	<script type="text/javascript">
-        var pasterMgr = WordPaster.getInstance({
+        WordPaster.getInstance({
             PostUrl: "http://localhost:8891/upload.aspx",
             Cookie: 'ASP.NET_SessionId=<%=Session.SessionID%>'
-        });
-        pasterMgr.Load();//加载控件
+        }).Load();//加载控件
 
 	    var ue = UE.getEditor('myEditor');
 
@@ -40,7 +39,6 @@
 	        var html = ue.getContent();
 	        //获取纯文本内容，返回: hello
 	        var txt = ue.getContentTxt();
-	        pasterMgr.SetEditor(ue);
 
 	        //WordPaster快捷键 Ctrl + V
 	        ue.addshortcutkey({
