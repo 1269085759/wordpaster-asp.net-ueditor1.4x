@@ -95,6 +95,7 @@ function WordPasterManager()
         editor.registerCommand(uiName, {
             execCommand: function () {
                 editor.focus();
+                _this.SetEditor(editor);
                 _this.PasteManual();
             }
         });
@@ -133,6 +134,7 @@ function WordPasterManager()
         editor.registerCommand(uiName, {
             execCommand: function () {
                 editor.focus();
+                _this.SetEditor(editor);
                 _this.UploadNetImg();
             }
         });
@@ -170,6 +172,7 @@ function WordPasterManager()
         editor.registerCommand(uiName, {
             execCommand: function () {
                 editor.focus();
+                _this.SetEditor(editor);
                 _this.PastePPT();
             }
         });
