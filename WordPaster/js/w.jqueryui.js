@@ -48,6 +48,7 @@ var WordPasterConfig = {
     , "AppPath"			    : ""
 	, "Cookie"			    : ""
     , "Servers"             : [{"url":"www.ncmem.com"},{"url":"www.xproerui.com"}]//内部服务器地址(不下载此地址中的图片)
+    , "Proxy"               : {url: ""/**http://192.168.0.1:8888 */,pwd: ""/**admin:123456 */}//代理
     , "WebImg"              : {urlEncode:true/*下载外部图片地址是URL是否自动编码，默认情况下自动编码，部分网站URL没有进行编码*/}
 	, "IcoError"            : "http://www.ncmem.com/products/word-imagepaster/ckeditor353/WordPaster/error.png"
     , "IcoUploader"         : "http://www.ncmem.com/products/word-imagepaster/ckeditor353/WordPaster/upload.gif"
