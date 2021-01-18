@@ -1,16 +1,4 @@
-﻿var FileUploaderState = {
-	Ready: 0,
-	Posting: 1,
-	Stop: 2,
-	Error: 3,
-	GetNewID: 4,
-	Complete: 5,
-	WaitContinueUpload: 6,
-	None: 7,
-	Waiting: 8
-};
-
-/*
+﻿/*
 	文件上传对象
 	参数：
 		fileID 文件唯一标识
@@ -30,6 +18,19 @@
 function FileUploader(fileID,filePath,mgr,width,height)
 {
 	var _this = this;
+	this.data={
+		state:{
+		Ready: 0,
+		Posting: 1,
+		Stop: 2,
+		Error: 3,
+		GetNewID: 4,
+		Complete: 5,
+		WaitContinueUpload: 6,
+		None: 7,
+		Waiting: 8
+	}
+	};
 	this.Manager = mgr;
 	this.Editor = mgr.Editor;
 	this.Config = mgr.Config;
@@ -42,7 +43,7 @@ function FileUploader(fileID,filePath,mgr,width,height)
 	this.imgW = width;
 	this.imgH = height;
 	this.LocaFile = filePath;//网络图片需要使用
-	this.State = FileUploaderState.None;
+	this.State = this.data.state.None;
 	this.LocalFile = filePath;
 	this.FileID = fileID;
 	this.idLoc = fileID;//add(2015-12-10)
@@ -82,7 +83,7 @@ function FileUploader(fileID,filePath,mgr,width,height)
 	{
 		//this.pButton.style.display = "none";
 		_this.pMsg.text("正在上传队列中等待...");
-		_this.State = FileUploaderState.Ready;
+		_this.State = this.data.state.Ready;
 	};
 
 	//从上传列表中删除
@@ -101,7 +102,7 @@ function FileUploader(fileID,filePath,mgr,width,height)
 	{
 		//var obj = _this.Manager.UploaderList[fid];
 		this.ATL.Stop();
-		this.State = FileUploaderState.Stop;
+		this.State = this.data.state.Stop;
 		this.pButton.text("重试");
 	};
 	this.addToEditor = function(){
