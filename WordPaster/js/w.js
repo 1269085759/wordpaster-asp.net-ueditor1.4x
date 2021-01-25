@@ -864,6 +864,7 @@ var WordPaster = {
         if (this.instance == null) {
             this.instance = new WordPasterManager();
             $.extend(this.instance.Config,cfg);
+            window.WordPaster = WordPaster;
         }
         return this.instance;
     }
