@@ -535,7 +535,7 @@ function WordPasterManager()
 	    {
             this.app.paste();
 	    }
-	    else if(_this.data.browser.edge)
+	    else if(this.data.browser.edge)
 	    {
             this.app.paste();
 	    }
