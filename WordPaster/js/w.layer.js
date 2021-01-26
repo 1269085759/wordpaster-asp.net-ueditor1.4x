@@ -253,7 +253,7 @@ function WordPasterManager()
 	if (this.data.browser.edge) { this.data.browser.ie = this.data.browser.firefox = this.data.browser.chrome = this.data.browser.chrome45 = false; }
 
     $(window).bind("beforeunload", function () {
-        if (this.data.browser.edge) _this.edgeApp.close();
+        if (_this.data.browser.edge) _this.edgeApp.close();
     });
     //Win64
     if (window.navigator.platform == "Win64")
